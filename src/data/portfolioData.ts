@@ -46,7 +46,7 @@ export const PORTFOLIO_DB: DatabaseTables = {
       resumen: "Licenciado en Informática Administrativa orientado al análisis de datos, con experiencia en consultas SQL, validación de información y reportes visuales. He identificado y corregido descuadres contables comparando registros en bases de datos, resuelto incidencias en procedimientos almacenados y desarrollado dashboards con indicadores y gráficos comparativos. Manejo SQL, Python y Excel intermedio, y cuento con conocimientos básicos de Power BI.",
       email: "anthonyandino959@gmail.com",
       linkedin: "https://linkedin.com/in/anthony-andino-ad",
-      portfolio: "https://anthonyandino.vercel.app",
+      portfolio: "https://anthonyandino-portfolio.vercel.app",
       disponibilidad: "Inmediata / Remoto e Híbrido"
     }
   ],
@@ -338,8 +338,8 @@ export const PORTFOLIO_DB: DatabaseTables = {
     {
       id: 3,
       medio: "Web Portfolio Oficial",
-      valor: "anthonyandino.vercel.app",
-      enlace: "https://anthonyandino.vercel.app",
+      valor: "anthonyandino-portfolio.vercel.app",
+      enlace: "https://anthonyandino-portfolio.vercel.app",
       icono: "WB",
       accion: "Visitar Sitio"
     },

@@ -187,7 +187,7 @@ const EditorialCardsView: React.FC<EditorialCardsViewProps> = ({ tableName, rows
             <div className="p-4 rounded-2xl bg-[#f7f6f2] border border-editorial-border">
               <span className="text-[10px] uppercase text-editorial-muted block mb-0.5">Portfolio Online</span>
               <a href={String(p.portfolio)} target="_blank" rel="noopener noreferrer" className="text-editorial-accent font-semibold hover:underline truncate block flex items-center gap-1">
-                <span>anthonyandino.vercel.app</span>
+                <span>anthonyandino-portfolio.vercel.app</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             </div>

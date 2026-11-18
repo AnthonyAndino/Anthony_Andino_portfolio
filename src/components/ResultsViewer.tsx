@@ -259,7 +259,7 @@ const CustomCardView: React.FC<CustomCardViewProps> = ({ tableName, rows }) => {
               <div className="p-3.5 rounded-xl bg-[#121316] border border-engine-border">
                 <span className="text-[#858b99] block text-[10px] uppercase font-bold">Portfolio Oficial</span>
                 <a href={String(p.portfolio)} target="_blank" rel="noopener noreferrer" className="text-engine-purple hover:underline truncate block flex items-center gap-1 font-medium">
-                  <span>anthonyandino.vercel.app</span>
+                  <span>anthonyandino-portfolio.vercel.app</span>
                   <ExternalLink className="w-3 h-3 inline" />
                 </a>
               </div>

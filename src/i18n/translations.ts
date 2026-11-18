@@ -2,7 +2,7 @@ export type Locale = 'es' | 'en';
 
 export const translations = {
   es: {
-    'meta.title': 'Anthony Andino — Analista de Datos y Auditoría SQL',
+    'meta.title': 'Anthony Andino | Portafolio',
     'meta.description':
       'Portfolio interactivo de análisis de datos, auditoría SQL y dashboards con Anthony Andino.',
     'nav.openMenu': 'Abrir menú',
@@ -86,7 +86,7 @@ export const translations = {
     'contact.modalDashboards': 'dashboards',
   },
   en: {
-    'meta.title': 'Anthony Andino — Data Analyst & SQL Auditing',
+    'meta.title': 'Anthony Andino | Portfolio',
     'meta.description':
       'Interactive portfolio of data analysis, SQL auditing and dashboards by Anthony Andino.',
     'nav.openMenu': 'Open menu',
