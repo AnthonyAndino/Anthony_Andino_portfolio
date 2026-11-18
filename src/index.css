@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Main Animation Theme Variables */
+  --thread-color: #ff3e00;
+  --cursor-color: #ff3e00;
+}
+
+html,
+body {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 0px;
+}
+
+@layer base {
+  body {
+    @apply bg-[#0c0d0f] text-[#141517] font-sans antialiased overflow-x-clip;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: #ff3e00;
+    color: #ffffff;
+  }
+}
+
+/* Crisp Minimal Scrollbar - No blur */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #141517;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff3e00;
+}
+
+/* ========================================================================= */
+/* Thread Layering: .section-bg (behind thread) / .section-content (above)     */
+/* Sections themselves must NOT create a stacking context, so the thread SVG  */
+/* (z-index 1 at the page root) renders above backgrounds and below content.  */
+/* ========================================================================= */
+.section-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.section-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Blinking block cursor of the SQL prompt figure (disabled with reduced motion) */
+@keyframes threadCursorBlink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.thread-cursor-blink {
+  animation: threadCursorBlink 1.05s steps(1, end) infinite;
+}
+
+/* Continuous Vermillion Wire Animation (Daksh Gajjar style) */
+.daksh-line-pulse {
+  stroke-dasharray: 8 6;
+  animation: lineTrace 1.6s linear infinite;
+}
+
+@keyframes lineTrace {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+/* Detail modal overlay active optimizations */
+body.work-modal-open button[aria-controls="fullscreen-navigation-menu"],
+body.work-modal-open aside[aria-label="Indicador de sección activa"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.2s ease;
+}
+
+body.work-modal-open .daksh-line-pulse {
+  animation-play-state: paused !important;
+}
+
+/* ========================================================================= */
+/* Projects Editorial List: GPU Sweep, Tag Inversion & Touch Styles          */
+/* ========================================================================= */
+.project-row {
+  position: relative;
+  transition: opacity 250ms ease;
+}
+
+/* Sibling rows dim to 40% when any row in list is hovered */
+.projects-list:hover .project-row:not(:hover):not(:focus-within) {
+  opacity: 0.4;
+}
+
+/* Background sweep layer */
+.project-row-sweep {
+  position: absolute;
+  inset: 0;
+  background-color: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 250ms ease-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.project-row:hover .project-row-sweep,
+.project-row:focus-visible .project-row-sweep,
+.project-row:focus-within .project-row-sweep {
+  transform: scaleX(1);
+  transform-origin: left;
+  transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* Content layer over sweep */
+.project-row-content {
+  position: relative;
+  z-index: 2;
+  transition: color 250ms ease;
+}
+
+.project-row:hover .project-row-content,
+.project-row:focus-visible .project-row-content,
+.project-row:focus-within .project-row-content {
+  color: var(--accent-contrast) !important;
+}
+
+.project-row:hover .project-text-dynamic,
+.project-row:focus-visible .project-text-dynamic,
+.project-row:focus-within .project-text-dynamic {
+  color: var(--accent-contrast) !important;
+}
+
+/* Invert tags style on hover */
+.project-row:hover .project-tag-pill,
+.project-row:focus-visible .project-tag-pill,
+.project-row:focus-within .project-tag-pill {
+  border-color: var(--accent-contrast) !important;
+  color: var(--accent-contrast) !important;
+  background-color: transparent !important;
+}
+
+/* Touch devices (no hover): permanent thick accent left border */
+@media (hover: none) {
+  .project-row {
+    border-left-width: 5px !important;
+    border-left-color: var(--accent) !important;
+  }
+}
+
+/* Skills 3x2 Grid & Tree Cluster Styles */
+@keyframes skillsCellFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-skillsCellFadeIn {
+  animation: skillsCellFadeIn 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes skillsPanelFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-skillsPanelFade {
+  animation: skillsPanelFade 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (max-height: 700px) {
+  .skill-label-secondary {
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .group:hover .skill-label-secondary,
+  .group:focus .skill-label-secondary,
+  .group:focus-visible .skill-label-secondary {
+    opacity: 1;
+  }
+}
+
+/* Respect Prefers Reduced Motion System Setting */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .daksh-line-pulse {
+    animation: none !important;
+  }
+
+  /* Thread figures appear already drawn, without the blinking cursor */
+  .thread-cursor-blink {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
