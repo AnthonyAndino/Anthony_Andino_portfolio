@@ -17,6 +17,8 @@ import {
   Maximize2
 } from 'lucide-react';
 import { QueryResult } from '../types/portfolio';
+import { gmailComposeUrl } from '../utils/contactLinks';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface ResultsViewerProps {
   result: QueryResult | null;
@@ -209,6 +211,7 @@ interface CustomCardViewProps {
 }
 
 const CustomCardView: React.FC<CustomCardViewProps> = ({ tableName, rows }) => {
+  const { t } = useLanguage();
   if (rows.length === 0) {
     return (
       <div className="text-center py-8 text-xs font-mono text-[#858b99]">
@@ -246,7 +249,13 @@ const CustomCardView: React.FC<CustomCardViewProps> = ({ tableName, rows }) => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t border-engine-border/70 font-mono text-xs">
               <div className="p-3.5 rounded-xl bg-[#121316] border border-engine-border">
                 <span className="text-[#858b99] block text-[10px] uppercase font-bold">Email</span>
-                <a href={`mailto:${p.email}`} className="text-engine-amber hover:underline truncate block font-medium">
+                <a
+                  href={gmailComposeUrl(String(p.email))}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${String(p.email)} — ${t('nav.openGmail')}`}
+                  className="text-engine-amber hover:underline truncate block font-medium"
+                >
                   {String(p.email)}
                 </a>
               </div>
@@ -498,6 +507,7 @@ const CustomCardView: React.FC<CustomCardViewProps> = ({ tableName, rows }) => {
               href={String(row.enlace)}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={String(row.enlace).startsWith('https://mail.google.com') ? `${String(row.valor)} — ${t('nav.openGmail')}` : undefined}
               className="p-5 rounded-2xl bg-[#1b1d23] hover:bg-[#23252d] border border-engine-border hover:border-engine-amber transition-all group flex flex-col justify-between shadow-lg"
             >
               <div>

@@ -2,6 +2,8 @@ import React from 'react';
 import { SectionId } from './NavigationHeader';
 import { PORTFOLIO_DB } from '../data/portfolioData';
 import { ArrowUpRight } from './Icons';
+import { gmailComposeUrl } from '../utils/contactLinks';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SiteFooterProps {
   onScrollToSection: (sectionId: SectionId) => void;
@@ -9,6 +11,7 @@ interface SiteFooterProps {
 
 export const SiteFooter: React.FC<SiteFooterProps> = ({ onScrollToSection }) => {
   const perfil = PORTFOLIO_DB.perfil[0];
+  const { t } = useLanguage();
 
   return (
     <footer id="footer-section" className="bg-[#0c0d0f] border-t border-white/10 py-12 text-xs font-mono text-[#a1a1aa] select-none transition-colors duration-500">
@@ -35,7 +38,10 @@ export const SiteFooter: React.FC<SiteFooterProps> = ({ onScrollToSection }) => 
             </a>
 
             <a
-              href={`mailto:${perfil.email}`}
+              href={gmailComposeUrl(String(perfil.email))}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${String(perfil.email)} — ${t('nav.openGmail')}`}
               className="inline-flex items-center gap-1 hover:text-[#ff3e00] transition-colors"
             >
               <span>Email</span>

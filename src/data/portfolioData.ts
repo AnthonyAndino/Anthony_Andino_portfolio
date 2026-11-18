@@ -1,4 +1,5 @@
 import { DatabaseTables, ProjectItem, QuickQueryItem, WorkExperienceCase } from '../types/portfolio';
+import { gmailComposeUrl, CONTACT_EMAIL } from '../utils/contactLinks';
 
 export const ABOUT_DATA = {
   bio: [
@@ -18,7 +19,7 @@ export interface ContactDataItem {
 export const CONTACT_DATA = {
   availability: 'Disponibilidad inmediata · Remoto o híbrido',
   intro: '¿Tienes un proyecto, una vacante o una pregunta sobre lo que hago? Escríbeme, con gusto conversamos.',
-  email: 'anthonyandino959@gmail.com',
+  email: CONTACT_EMAIL,
   links: [
     {
       label: 'LinkedIn',
@@ -44,7 +45,7 @@ export const PORTFOLIO_DB: DatabaseTables = {
       grado: "Licenciado en Informática Administrativa",
       ubicacion: "Tegucigalpa, Honduras",
       resumen: "Licenciado en Informática Administrativa orientado al análisis de datos, con experiencia en consultas SQL, validación de información y reportes visuales. He identificado y corregido descuadres contables comparando registros en bases de datos, resuelto incidencias en procedimientos almacenados y desarrollado dashboards con indicadores y gráficos comparativos. Manejo SQL, Python y Excel intermedio, y cuento con conocimientos básicos de Power BI.",
-      email: "anthonyandino959@gmail.com",
+      email: CONTACT_EMAIL,
       linkedin: "https://linkedin.com/in/anthony-andino-ad",
       portfolio: "https://anthonyandino-portfolio.vercel.app",
       disponibilidad: "Inmediata / Remoto e Híbrido"
@@ -330,8 +331,8 @@ export const PORTFOLIO_DB: DatabaseTables = {
     {
       id: 2,
       medio: "Correo Electrónico",
-      valor: "anthonyandino959@gmail.com",
-      enlace: "mailto:anthonyandino959@gmail.com",
+      valor: CONTACT_EMAIL,
+      enlace: gmailComposeUrl(CONTACT_EMAIL),
       icono: "EM",
       accion: "Enviar Email"
     },

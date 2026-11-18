@@ -1,6 +1,8 @@
 import React from 'react';
 import { Database, Terminal, Mail, MapPin, Network, FolderTree } from 'lucide-react';
 import { PORTFOLIO_DB } from '../data/portfolioData';
+import { gmailComposeUrl } from '../utils/contactLinks';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export type ViewMode = 'graph' | 'vfs' | 'terminal';
 
@@ -12,6 +14,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, onQuickQuery }) => {
   const perfil = PORTFOLIO_DB.perfil[0];
+  const { t } = useLanguage();
 
   return (
     <header className="relative z-10 pt-6 pb-4 border-b border-engine-border bg-[#0f1013]/90 backdrop-blur-xl">
@@ -83,7 +86,10 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onViewChange, onQui
             </a>
 
             <a
-              href={`mailto:${perfil.email}`}
+              href={gmailComposeUrl(String(perfil.email))}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${String(perfil.email)} — ${t('nav.openGmail')}`}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono bg-engine-card hover:bg-engine-cardHover border border-engine-border hover:border-engine-amber text-white transition-all shadow-sm"
               title="Enviar correo directo"
             >

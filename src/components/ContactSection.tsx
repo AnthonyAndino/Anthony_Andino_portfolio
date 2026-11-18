@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePortfolioData } from '../i18n/usePortfolioData';
 import { ScrollReveal } from './ScrollReveal';
+import { gmailComposeUrl } from '../utils/contactLinks';
 
 interface ContactSectionProps {
   onOpenContact: () => void;
@@ -63,7 +64,7 @@ const ArrowUpIcon: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, onScrollToHome }) => {
-  const { tx } = useLanguage();
+  const { tx, t } = useLanguage();
   const { CONTACT_DATA } = usePortfolioData();
   const [copied, setCopied] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -274,7 +275,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
                   {/* Email + Copy button on same line */}
                   <div className="flex items-center gap-3 flex-wrap">
                     <a
-                      href={`mailto:${CONTACT_DATA.email}`}
+                      href={gmailComposeUrl(CONTACT_DATA.email)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${CONTACT_DATA.email} — ${t('nav.openGmail')}`}
                       className="text-white font-display font-light tracking-tight hover:text-[#ff3e00] transition-colors whitespace-nowrap"
                       style={{ fontSize: 'clamp(22px, 3.6vw, 56px)' }}
                     >

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUpRight } from './Icons';
 import { useLanguage } from '../i18n/LanguageContext';
+import { gmailComposeUrl, CONTACT_EMAIL } from '../utils/contactLinks';
 
 export type SectionId = 'home' | 'work' | 'projects' | 'skills' | 'about' | 'sql' | 'contact';
 
@@ -259,10 +260,13 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
 
           <div className="flex flex-wrap items-center gap-6 text-[#141517]">
             <a
-              href="mailto:anthonyandino959@gmail.com"
+              href={gmailComposeUrl(CONTACT_EMAIL)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${CONTACT_EMAIL} — ${t('nav.openGmail')}`}
               className="hover:text-[#ff3e00] transition-colors"
             >
-              anthonyandino959@gmail.com
+              {CONTACT_EMAIL}
             </a>
 
             <a

@@ -1,6 +1,8 @@
 import React from 'react';
 import { PORTFOLIO_DB } from '../data/portfolioData';
 import { ArrowUpRight } from './Icons';
+import { gmailComposeUrl } from '../utils/contactLinks';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface EditorialFooterProps {
   onQuickQuery: (query: string) => void;
@@ -8,6 +10,7 @@ interface EditorialFooterProps {
 
 export const EditorialFooter: React.FC<EditorialFooterProps> = ({ onQuickQuery }) => {
   const perfil = PORTFOLIO_DB.perfil[0];
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-[#f7f6f2] border-t border-editorial-border py-12 sm:py-16 text-xs font-mono text-editorial-muted select-none">
@@ -33,7 +36,10 @@ export const EditorialFooter: React.FC<EditorialFooterProps> = ({ onQuickQuery }
               <ArrowUpRight className="w-3 h-3 text-current" />
             </a>
             <a
-              href={`mailto:${perfil.email}`}
+              href={gmailComposeUrl(String(perfil.email))}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${String(perfil.email)} — ${t('nav.openGmail')}`}
               className="hover:text-editorial-accent transition-colors inline-flex items-center gap-1"
             >
               <span>Email</span>

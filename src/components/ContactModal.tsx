@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ArrowUpRight, CloseX } from './Icons';
 import { useLanguage } from '../i18n/LanguageContext';
+import { gmailComposeUrl, CONTACT_EMAIL } from '../utils/contactLinks';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -8,7 +9,7 @@ interface ContactModalProps {
 }
 
 export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
-  const { tx } = useLanguage();
+  const { tx, t } = useLanguage();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -18,6 +19,19 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
 
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const submitRunRef = useRef(0);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  const handleClose = useCallback(() => {
+    submitRunRef.current += 1;
+    setIsSending(false);
+    setSubmitted(false);
+    onCloseRef.current();
+  }, []);
 
   // Body scroll lock, Escape key listener, and focus restoration
   useEffect(() => {
@@ -28,13 +42,14 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-          onClose();
+          handleClose();
         }
       };
 
       window.addEventListener('keydown', handleKeyDown);
 
       return () => {
+        submitRunRef.current += 1;
         document.body.style.overflow = originalOverflow;
         window.removeEventListener('keydown', handleKeyDown);
         if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
@@ -42,50 +57,42 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
         }
       };
     }
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === backdropRef.current) {
-      onClose();
+      handleClose();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Honeypot check — bots fill hidden fields
     if (honeypot) return;
 
-    // Basic validation
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     const trimmedMessage = message.trim();
     if (!trimmedName || !trimmedEmail || !trimmedMessage) return;
 
-    // Prevent double submit
     if (isSending || submitted) return;
+    const run = ++submitRunRef.current;
     setIsSending(true);
 
-    // Generate mailto link — this is the delivery mechanism
-    const subject = encodeURIComponent(
-      `${tx('Consulta Portfolio: Mensaje de', 'Portfolio Inquiry: Message from')} ${trimmedName}`
-    );
-    const body = encodeURIComponent(
-      `${tx('Nombre:', 'Name:')} ${trimmedName}\nEmail: ${trimmedEmail}\n\n${tx('Mensaje:', 'Message:')}\n${trimmedMessage}`
-    );
-    window.location.href = `mailto:anthonyandino959@gmail.com?subject=${subject}&body=${body}`;
-
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    if (submitRunRef.current !== run) return;
+    setIsSending(false);
     setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setIsSending(false);
-      setName('');
-      setEmail('');
-      setMessage('');
-      onClose();
-    }, 2000);
+
+    await new Promise((resolve) => setTimeout(resolve, 1400));
+    if (submitRunRef.current !== run) return;
+    setSubmitted(false);
+    setName('');
+    setEmail('');
+    setMessage('');
+    handleClose();
   };
 
   return (
@@ -115,7 +122,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
 
           {/* Close button with rotation on hover */}
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="group p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300 focus:outline-none"
             title={tx('Cerrar modal (Esc)', 'Close modal (Esc)')}
             aria-label={tx('Cerrar modal', 'Close modal')}
@@ -138,8 +145,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
               'Fill in the record values to connect directly with Anthony Andino about data audits, dashboards or job openings.'
             )}
           </p>
-          <p className="text-[10px] font-mono text-white/40">
-            {tx('Se abrirá tu aplicación de correo con los datos rellenados.', 'Your email app will open with the data prefilled.')}
+          <p className="text-[10px] font-mono text-white/60">
+            {t('contact.demoNotice')}
           </p>
         </div>
 
@@ -234,11 +241,28 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             );
           </div>
 
+          <p aria-live="polite" className="sr-only">
+            {submitted
+              ? t('contact.success')
+              : isSending
+                ? t('contact.sending')
+                : ''}
+          </p>
+
           {/* Footer of Form: Direct channels & Submit */}
           <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div className="text-[11px] font-mono text-[#a1a1aa] space-y-1">
               <div>
-                {tx('Canal directo:', 'Direct channel:')} <a href="mailto:anthonyandino959@gmail.com" className="text-white hover:underline">anthonyandino959@gmail.com</a>
+                {tx('Canal directo:', 'Direct channel:')}{' '}
+                <a
+                  href={gmailComposeUrl(CONTACT_EMAIL)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${CONTACT_EMAIL} — ${t('nav.openGmail')}`}
+                  className="text-white hover:underline"
+                >
+                  {CONTACT_EMAIL}
+                </a>
               </div>
               <div className="text-[#71717a]">
                 {tx('Tegucigalpa, Honduras · Disponibilidad Inmediata', 'Tegucigalpa, Honduras · Immediate Availability')}
@@ -253,9 +277,9 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
             >
               <span>
                 {submitted
-                  ? tx('EJECUTANDO COMMIT...', 'EXECUTING COMMIT...')
+                  ? t('contact.success')
                   : isSending
-                    ? tx('PROCESANDO...', 'PROCESSING...')
+                    ? t('contact.sending')
                     : 'COMMIT TRANSACTION'}
               </span>
               <ArrowUpRight className="w-3.5 h-3.5" />

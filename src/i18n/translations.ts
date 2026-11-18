@@ -14,6 +14,7 @@ export const translations = {
     'nav.location': 'TEGUCIGALPA, HONDURAS · DISPONIBILIDAD INMEDIATA',
     'nav.dialogLabel': 'Menú principal de navegación',
     'nav.toggleLanguage': 'Cambiar idioma a inglés',
+    'nav.openGmail': 'Abrir Gmail para escribir a Anthony (se abre en pestaña nueva)',
     'nav.home': 'Inicio',
     'nav.work': 'Trabajo',
     'nav.projects': 'Proyectos',
@@ -84,6 +85,9 @@ export const translations = {
     'skills.dashboards': 'dashboards',
     'skills.legendCore': 'Principal',
     'contact.modalDashboards': 'dashboards',
+    'contact.demoNotice': 'Demo: el envío se simula aquí.',
+    'contact.sending': 'PROCESANDO...',
+    'contact.success': 'MENSAJE ENVIADO',
   },
   en: {
     'meta.title': 'Anthony Andino | Portfolio',
@@ -98,6 +102,7 @@ export const translations = {
     'nav.location': 'TEGUCIGALPA, HONDURAS · IMMEDIATE AVAILABILITY',
     'nav.dialogLabel': 'Main navigation menu',
     'nav.toggleLanguage': 'Switch language to Spanish',
+    'nav.openGmail': 'Open Gmail to write to Anthony (opens in a new tab)',
     'nav.home': 'Home',
     'nav.work': 'Work',
     'nav.projects': 'Projects',
@@ -167,6 +172,9 @@ export const translations = {
     'skills.dashboards': 'dashboards',
     'skills.legendCore': 'Core',
     'contact.modalDashboards': 'dashboards',
+    'contact.demoNotice': 'Demo: sending is simulated here.',
+    'contact.sending': 'PROCESSING...',
+    'contact.success': 'MESSAGE SENT',
   },
 } as const;
 

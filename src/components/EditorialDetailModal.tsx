@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Table, LayoutGrid, Copy, Check, ExternalLink, Calendar, Building2, CheckCircle2 } from 'lucide-react';
 import { QueryResult } from '../types/portfolio';
+import { gmailComposeUrl } from '../utils/contactLinks';
 import { ArrowUpRight } from './Icons';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface EditorialDetailModalProps {
   result: QueryResult | null;
@@ -132,6 +134,7 @@ interface EditorialCardsViewProps {
 }
 
 const EditorialCardsView: React.FC<EditorialCardsViewProps> = ({ tableName, rows }) => {
+  const { t } = useLanguage();
   if (rows.length === 0) {
     return (
       <div className="text-center py-12 text-xs font-mono text-editorial-muted">
@@ -174,7 +177,13 @@ const EditorialCardsView: React.FC<EditorialCardsViewProps> = ({ tableName, rows
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-editorial-borderLight font-mono text-xs">
             <div className="p-4 rounded-2xl bg-[#f7f6f2] border border-editorial-border">
               <span className="text-[10px] uppercase text-editorial-muted block mb-0.5">Correo</span>
-              <a href={`mailto:${p.email}`} className="text-[#141517] font-semibold hover:underline truncate block">
+              <a
+                href={gmailComposeUrl(String(p.email))}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${String(p.email)} — ${t('nav.openGmail')}`}
+                className="text-[#141517] font-semibold hover:underline truncate block"
+              >
                 {String(p.email)}
               </a>
             </div>
@@ -438,6 +447,7 @@ const EditorialCardsView: React.FC<EditorialCardsViewProps> = ({ tableName, rows
               href={String(row.enlace)}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={String(row.enlace).startsWith('https://mail.google.com') ? `${String(row.valor)} — ${t('nav.openGmail')}` : undefined}
               className="p-6 rounded-3xl bg-white hover:bg-[#fbfbf9] border border-editorial-border hover:border-[#141517] transition-all group flex flex-col justify-between"
             >
               <div>
