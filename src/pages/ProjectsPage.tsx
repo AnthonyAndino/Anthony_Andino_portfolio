@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { PROJECTS_DATA } from '../data/portfolioData';
+import { useLanguage } from '../i18n/LanguageContext';
+import { usePortfolioData } from '../i18n/usePortfolioData';
 import { ProjectItem } from '../types/portfolio';
 import { ArrowUpRight } from '../components/Icons';
 
@@ -28,6 +29,9 @@ interface ProjectsPageProps {
 }
 
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
+  const { t, tx } = useLanguage();
+  const { PROJECTS_DATA } = usePortfolioData();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const detailPanelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -258,12 +262,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
         <div className="border-b border-[#ded9ce] pb-2 sm:pb-3">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#ff3e00] font-bold">
-              02 / PROYECTOS & ARQUITECTURA ANALÍTICA
+              {tx('02 / PROYECTOS & ARQUITECTURA ANALÍTICA', '02 / PROJECTS & ANALYTICAL ARCHITECTURE')}
             </span>
           </div>
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl text-[#141517] tracking-tight">
-              Selected Projects & Systems
+              {t('section.projects')}
             </h2>
             <div className="flex items-center gap-2 font-mono text-xs text-[#71717a] flex-shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-[#ff3e00]" />
@@ -271,7 +275,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
             </div>
           </div>
           <p className="font-sans text-xs text-[#71717a] mt-0.5 leading-snug">
-            Análisis de datos en SQL y Power BI, aplicaciones web y laboratorios de redes.
+            {tx('Análisis de datos en SQL y Power BI, aplicaciones web y laboratorios de redes.', 'SQL and Power BI data analysis, web applications, and networking labs.')}
           </p>
         </div>
 
@@ -287,7 +291,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                 key={proj.id}
                 tabIndex={0}
                 role="button"
-                aria-label={`Ver detalles del proyecto ${proj.title}`}
+                aria-label={`${tx('Ver detalles del proyecto', 'View details for project')} ${proj.title}`}
                 onClick={(e) => handleOpenDetail(proj, e.currentTarget)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -295,7 +299,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                     handleOpenDetail(proj, e.currentTarget);
                   }
                 }}
-                data-cursor-text="VER"
+                data-cursor-text={tx('VER', 'VIEW')}
                 data-cursor-bg={proj.accent}
                 data-cursor-color={contrast}
                 className="project-row group flex-1 flex items-center px-2 sm:px-4 lg:px-6 transition-all duration-300 border-b border-[#ded9ce] last:border-b-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#ff3e00] rounded-lg"
@@ -415,7 +419,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
               <button
                 ref={closeButtonRef}
                 onClick={handleCloseDetail}
-                aria-label="Cerrar detalle del proyecto"
+                aria-label={tx('Cerrar detalle del proyecto', 'Close project details')}
                 className="w-8 h-8 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff3e00] cursor-pointer"
               >
                 <span className="text-base leading-none">✕</span>
@@ -448,7 +452,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                         <div
                           tabIndex={0}
                           role="button"
-                          aria-label={`Ampliar imagen: ${activeProject.images![selectedImageIndex]?.alt || activeProject.title}`}
+                          aria-label={`${tx('Ampliar imagen:', 'Enlarge image:')} ${activeProject.images![selectedImageIndex]?.alt || activeProject.title}`}
                           onClick={() => {
                             setLightboxIndex(selectedImageIndex);
                             setIsLightboxOpen(true);
@@ -478,10 +482,10 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                               setLightboxIndex(selectedImageIndex);
                               setIsLightboxOpen(true);
                             }}
-                            aria-label="Ampliar imagen"
+                            aria-label={tx('Ampliar imagen', 'Enlarge image')}
                             className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-md bg-[#0c0d0f]/85 hover:bg-[#18191e] border border-white/15 text-[10px] font-mono text-white/90 opacity-90 group-hover:opacity-100 transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
                           >
-                            <span>Ampliar</span>
+                            <span>{tx('Ampliar', 'Enlarge')}</span>
                             <span aria-hidden="true">⤢</span>
                           </button>
                         </div>
@@ -506,7 +510,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                                     ? 'border-[#ff3e00] ring-1 ring-[#ff3e00] opacity-100'
                                     : 'border-white/15 opacity-60 hover:opacity-100'
                                 }`}
-                                aria-label={`Ver imagen ${idx + 1}: ${img.alt}`}
+                                aria-label={`${tx('Ver imagen', 'View image')} ${idx + 1}: ${img.alt}`}
                               >
                                 <img
                                   src={img.src}
@@ -541,7 +545,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                         {activeProject.findings && activeProject.findings.length > 0 && (
                           <div className="space-y-1.5">
                             <span className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold block text-white/70">
-                              HALLAZGOS CLAVE DEL ANÁLISIS:
+                              {tx('HALLAZGOS CLAVE DEL ANÁLISIS:', 'KEY FINDINGS:')}
                             </span>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                               {activeProject.findings.map((f, fIdx) => (
@@ -567,7 +571,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                         {/* Detail Bullets (Process, architecture, analytical criteria) */}
                         <div className="space-y-1.5 sm:space-y-2">
                           <span className="text-[10px] font-mono uppercase tracking-[0.2em] font-bold block text-white/70">
-                            ARQUITECTURA & CARACTERÍSTICAS TÉCNICAS:
+                            {tx('ARQUITECTURA & CARACTERÍSTICAS TÉCNICAS:', 'ARCHITECTURE & TECHNICAL FEATURES:')}
                           </span>
                           <ul className="space-y-1 sm:space-y-1.5 text-xs text-[#d4d4d8] font-sans">
                             {activeProject.detailBullets.map((bullet, idx) => (
@@ -650,7 +654,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
           ref={lightboxRef}
           role="dialog"
           aria-modal="true"
-          aria-label={`Vista ampliada: ${activeProject.images[lightboxIndex]?.alt || activeProject.title}`}
+          aria-label={`${tx('Vista ampliada:', 'Enlarged view:')} ${activeProject.images[lightboxIndex]?.alt || activeProject.title}`}
           className="fixed inset-0 z-50 bg-[#0c0d0f]/95 flex flex-col justify-between p-4 sm:p-6 select-none"
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -674,7 +678,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
             <button
               ref={lightboxCloseBtnRef}
               onClick={() => setIsLightboxOpen(false)}
-              aria-label="Cerrar vista ampliada"
+              aria-label={tx('Cerrar vista ampliada', 'Close enlarged view')}
               className="w-9 h-9 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff3e00] cursor-pointer"
             >
               <span className="text-base leading-none">✕</span>
@@ -692,7 +696,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                     prev > 0 ? prev - 1 : activeProject.images!.length - 1
                   );
                 }}
-                aria-label="Imagen anterior"
+                aria-label={tx('Imagen anterior', 'Previous image')}
                 className="absolute left-2 sm:left-4 z-10 w-10 h-10 rounded-full bg-[#18191e]/90 hover:bg-[#252730] border border-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff3e00] cursor-pointer shadow-lg"
               >
                 <span className="text-xl leading-none">←</span>
@@ -715,7 +719,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ onOpenQuery }) => {
                     prev < activeProject.images!.length - 1 ? prev + 1 : 0
                   );
                 }}
-                aria-label="Imagen siguiente"
+                aria-label={tx('Imagen siguiente', 'Next image')}
                 className="absolute right-2 sm:right-4 z-10 w-10 h-10 rounded-full bg-[#18191e]/90 hover:bg-[#252730] border border-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff3e00] cursor-pointer shadow-lg"
               >
                 <span className="text-xl leading-none">→</span>

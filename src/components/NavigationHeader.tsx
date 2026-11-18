@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUpRight } from './Icons';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export type SectionId = 'home' | 'work' | 'projects' | 'skills' | 'about' | 'sql' | 'contact';
 
@@ -15,22 +16,23 @@ interface NavItem {
   sublabel: string;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { id: 'home', number: '00', label: 'Home', sublabel: 'Introduction & Hero' },
-  { id: 'work', number: '01', label: 'Work', sublabel: 'Production Audits & Systems' },
-  { id: 'projects', number: '02', label: 'Projects', sublabel: 'Dashboards & Architecture' },
-  { id: 'skills', number: '03', label: 'Stack', sublabel: 'SQL, Python & Relational DBs' },
-  { id: 'about', number: '04', label: 'About', sublabel: 'UNAH Education & Certifications' },
-  { id: 'sql', number: '05', label: 'Console', sublabel: 'Interactive In-Memory Engine' },
-  { id: 'contact', number: '06', label: 'Contact', sublabel: 'Terminal Transaction & Channels' },
-];
-
 export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
   activeSection,
   onNavigateSection,
 }) => {
+  const { locale, t, toggleLocale } = useLanguage();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [hoveredItem, setHoveredItem] = useState<SectionId | null>(null);
+
+  const NAV_ITEMS: NavItem[] = [
+    { id: 'home', number: '00', label: t('nav.home'), sublabel: t('nav.sub.home') },
+    { id: 'work', number: '01', label: t('nav.work'), sublabel: t('nav.sub.work') },
+    { id: 'projects', number: '02', label: t('nav.projects'), sublabel: t('nav.sub.projects') },
+    { id: 'skills', number: '03', label: t('nav.skills'), sublabel: t('nav.sub.skills') },
+    { id: 'about', number: '04', label: t('nav.about'), sublabel: t('nav.sub.about') },
+    { id: 'sql', number: '05', label: t('nav.sql'), sublabel: t('nav.sub.sql') },
+    { id: 'contact', number: '06', label: t('nav.contact'), sublabel: t('nav.sub.contact') },
+  ];
 
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const menuContainerRef = useRef<HTMLDivElement | null>(null);
@@ -110,7 +112,7 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-controls="fullscreen-navigation-menu"
-        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+        aria-label={isOpen ? t('nav.closeMenu') : t('nav.openMenu')}
         className={`fixed top-4 sm:top-6 lg:top-7 right-4 sm:right-6 lg:right-8 z-50 select-none group inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full font-mono text-xs font-semibold uppercase tracking-widest transition-all duration-300 focus:outline-none cursor-pointer shadow-md ${
           isOpen
             ? 'bg-[#141517] text-white border border-[#141517]'
@@ -119,7 +121,7 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
             : 'bg-[#f4f1ea] border border-[#ded9ce] text-[#141517] hover:border-[#141517]'
         }`}
       >
-        <span>{isOpen ? 'CLOSE' : 'MENU'}</span>
+        <span>{isOpen ? t('nav.close') : t('nav.menu')}</span>
 
         {/* Circular Editorial Icon (Three horizontal lines -> X) */}
         <div
@@ -155,13 +157,31 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
         </div>
       </button>
 
+      {/* Compact ES/EN locale toggle, immediately left of the menu pill */}
+      <button
+        type="button"
+        onClick={toggleLocale}
+        aria-label={t('nav.toggleLanguage')}
+        className={`fixed top-4 sm:top-6 lg:top-7 right-28 sm:right-36 lg:right-40 z-50 select-none inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-mono text-xs font-semibold uppercase tracking-widest transition-all duration-300 focus:outline-none cursor-pointer shadow-md ${
+          isOpen
+            ? 'bg-[#141517] text-white border border-[#141517]'
+            : isDarkSection
+            ? 'bg-[#18191e] border border-white/20 text-[#f4f1ea] hover:border-[#ff3e00]'
+            : 'bg-[#f4f1ea] border border-[#ded9ce] text-[#141517] hover:border-[#141517]'
+        }`}
+      >
+        <span className={locale === 'es' ? 'text-[#ff3e00]' : 'opacity-40'}>ES</span>
+        <span className="opacity-30">/</span>
+        <span className={locale === 'en' ? 'text-[#ff3e00]' : 'opacity-40'}>EN</span>
+      </button>
+
       {/* 2. Full-Screen Menu Overlay Layer */}
       <div
         id="fullscreen-navigation-menu"
         ref={menuContainerRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Menú principal de navegación"
+        aria-label={t('nav.dialogLabel')}
         className={`fixed inset-0 z-40 bg-[#f4f1ea] text-[#141517] flex flex-col justify-between pt-16 sm:pt-20 pb-8 px-6 sm:px-12 lg:px-20 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] select-none ${
           isOpen
             ? 'opacity-100 pointer-events-auto translate-y-0'
@@ -173,7 +193,7 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
           className="absolute top-8 sm:top-10 left-6 sm:left-12 lg:left-20 text-[9px] font-mono uppercase tracking-[0.3em] text-[#8a8a93] pointer-events-none"
           aria-hidden="true"
         >
-          COLLECTION INDEX · 00–06
+          {t('nav.collectionIndex')}
         </div>
 
         {/* Navigation List: Massive Editorial Scale */}
@@ -211,7 +231,7 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
                       {isActive && (
                         <span
                           className="inline-block w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#ff3e00] ml-3 sm:ml-4 align-middle"
-                          title="Sección actualmente visible"
+                          title={t('nav.activeSection')}
                         />
                       )}
 
@@ -234,7 +254,7 @@ export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
         <div className="max-w-5xl w-full mx-auto pt-6 border-t border-[#ded9ce] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-mono text-[#71717a]">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff3e00]" />
-            <span>TEGUCIGALPA, HONDURAS · DISPONIBILIDAD INMEDIATA</span>
+            <span>{t('nav.location')}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-[#141517]">

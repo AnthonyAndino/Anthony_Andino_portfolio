@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { PORTFOLIO_DB, ABOUT_DATA } from '../data/portfolioData';
+import { useLanguage } from '../i18n/LanguageContext';
+import { usePortfolioData } from '../i18n/usePortfolioData';
 import { InteractiveCertifications } from '../components/InteractiveCertifications';
 
 interface AboutPageProps {
@@ -7,6 +8,9 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
+  const { tx } = useLanguage();
+  const { PORTFOLIO_DB, ABOUT_DATA } = usePortfolioData();
+
   const certs = PORTFOLIO_DB.certificaciones;
   const [photoError, setPhotoError] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
@@ -46,7 +50,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
         {/* ========================================================================= */}
         <div data-thread-content="1" className="max-w-7xl mx-auto w-full px-4 sm:px-8 lg:px-12 xl:pl-[240px] flex-shrink-0">
           <section
-            aria-label="Presentación y formación de Anthony Andino"
+            aria-label={tx('Presentación y formación de Anthony Andino', 'Introduction and education of Anthony Andino')}
             className="flex-shrink-0 flex flex-col lg:flex-row items-start justify-start gap-[clamp(32px,4vw,64px)] border-b border-[#ded9ce] pb-3"
           >
           {/* Columna Izquierda: Presentación (hasta 760px ancho, max 70ch) */}
@@ -60,7 +64,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
               }}
               className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#ff3e00] font-bold block mb-1"
             >
-              04 / FORMACIÓN & CERTIFICACIONES
+              {tx('04 / FORMACIÓN & CERTIFICACIONES', '04 / EDUCATION & CERTIFICATIONS')}
             </span>
 
             {/* Título: "About" en sans grande con "Anthony" en serif cursiva */}
@@ -72,7 +76,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
               }}
               className="font-sans font-light text-3xl sm:text-4xl lg:text-[2.5rem] text-[#141517] tracking-tight leading-none mb-2.5"
             >
-              About <span className="font-serif italic font-normal text-[#ff3e00]">Anthony</span>
+              {tx('Sobre', 'About')} <span className="font-serif italic font-normal text-[#ff3e00]">Anthony</span>
             </h2>
 
             {/* Texto de presentación: 3 párrafos compactos (clamp 15px - 18px, leading 1.5, max 70ch) */}
@@ -132,7 +136,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
               {!photoError ? (
                 <img
                   src="/about/profilepic.jfif"
-                  alt="Foto de Anthony Andino"
+                  alt={tx('Foto de Anthony Andino', 'Photo of Anthony Andino')}
                   onError={() => setPhotoError(true)}
                   className="w-full h-full object-cover rounded-xl select-none"
                   loading="lazy"
@@ -181,7 +185,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
                 className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10.5px] font-mono text-[#71717a]"
               >
                 <span className="text-[#141517] font-semibold">
-                  Licenciatura en Informática Administrativa
+                  {tx('Licenciatura en Informática Administrativa', "Bachelor's Degree in Administrative Informatics")}
                 </span>
                 <span>·</span>
                 <span>UNAH</span>
@@ -189,7 +193,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
                 <span>2020–2026</span>
                 <span>·</span>
                 <span className="text-emerald-800 font-bold bg-emerald-50 px-1 py-0.2 rounded border border-emerald-200 text-[9.5px]">
-                  Titulado
+                  {tx('Titulado', 'Degree Awarded')}
                 </span>
                 <button
                   type="button"
@@ -209,10 +213,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
                 }}
                 className="text-[10.5px] font-mono text-[#71717a]"
               >
-                <span>Idiomas: </span>
-                <strong className="text-[#141517]">Español (Nativo)</strong>
+                <span>{tx('Idiomas: ', 'Languages: ')}</span>
+                <strong className="text-[#141517]">{tx('Español (Nativo)', 'Spanish (Native)')}</strong>
                 <span className="mx-1">·</span>
-                <strong className="text-[#ff3e00]">Inglés (B1)</strong>
+                <strong className="text-[#ff3e00]">{tx('Inglés (B1)', 'English (B1)')}</strong>
               </div>
             </div>
           </div>
@@ -223,7 +227,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuery }) => {
       {/* 2. ZONA INFERIOR: Certificaciones                                          */}
       {/* ========================================================================= */}
       <section
-        aria-label="Certificaciones internacionales oficiales"
+        aria-label={tx('Certificaciones internacionales oficiales', 'Official international certifications')}
         className="flex-1 min-h-0 w-full flex flex-col justify-center items-center px-4 sm:px-8 lg:px-12"
       >
         <div className="max-w-7xl w-full mx-auto min-h-0 flex flex-col justify-center">

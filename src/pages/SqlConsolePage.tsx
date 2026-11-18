@@ -4,7 +4,9 @@ import { QueryResult } from '../types/portfolio';
 import { Checkmark } from '../components/Icons';
 import { ScrollReveal } from '../components/ScrollReveal';
 import { SqlCanvasBackground, SqlCanvasBackgroundRef } from '../components/SqlCanvasBackground';
-import { CHALLENGE_LEVELS, ChallengeLevelConfig, CHALLENGE_DB } from '../data/challengeData';
+import { ChallengeLevelConfig } from '../data/challengeData';
+import { useChallengeData } from '../i18n/useChallengeData';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SqlConsolePageProps {
   initialQuery?: string;
@@ -19,36 +21,38 @@ interface SuggestionItem {
   category: string;
 }
 
-const FREE_PRESETS: SuggestionItem[] = [
+const buildFreePresets = (
+  tx: (spanish: string, english: string) => string
+): SuggestionItem[] => [
   {
-    label: 'Perfil y Contacto',
+    label: tx('Perfil y Contacto', 'Profile & Contact'),
     query: 'SELECT nombre, titulo, ubicacion, disponibilidad FROM perfil;',
-    category: 'Básico',
+    category: tx('Básico', 'Basic'),
   },
   {
-    label: 'Experiencia Laboral',
+    label: tx('Experiencia Laboral', 'Work Experience'),
     query: 'SELECT empresa, cargo, periodo FROM experiencia;',
-    category: 'Carrera',
+    category: tx('Carrera', 'Career'),
   },
   {
-    label: 'Proyectos Principales',
+    label: tx('Proyectos Principales', 'Featured Projects'),
     query: 'SELECT nombre, categoria, stack_resumen FROM proyectos;',
-    category: 'Proyectos',
+    category: tx('Proyectos', 'Projects'),
   },
   {
-    label: 'Habilidades Técnicas',
+    label: tx('Habilidades Técnicas', 'Technical Skills'),
     query: 'SELECT categoria, nivel, destacadas FROM habilidades;',
-    category: 'Skills',
+    category: tx('Skills', 'Skills'),
   },
   {
-    label: 'Certificaciones',
+    label: tx('Certificaciones', 'Certifications'),
     query: 'SELECT titulo, entidad, fecha FROM certificaciones;',
-    category: 'Educación',
+    category: tx('Educación', 'Education'),
   },
   {
-    label: 'Educación Universitaria',
+    label: tx('Educación Universitaria', 'University Education'),
     query: 'SELECT titulo, institucion, periodo, estado FROM educacion;',
-    category: 'Educación',
+    category: tx('Educación', 'Education'),
   },
 ];
 
@@ -67,6 +71,10 @@ interface StoredChallengeState {
 export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
   initialQuery,
 }) => {
+  const { locale, t, tx } = useLanguage();
+  const { CHALLENGE_LEVELS, CHALLENGE_DB } = useChallengeData();
+  const FREE_PRESETS = buildFreePresets(tx);
+
   // Mode selection: 'challenge' | 'free'
   const [activeTab, setActiveTab] = useState<TabMode>('challenge');
 
@@ -221,7 +229,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
       setActiveTab('free');
       setFreeInputVal(initialQuery);
       setFreePage(1);
-      const res = SqlEngine.execute(initialQuery, { context: 'portfolio' });
+      const res = SqlEngine.execute(initialQuery, { context: 'portfolio', locale });
       setFreeResult(res);
 
       // Trigger wave from center, ONLY if section is visible in viewport
@@ -239,7 +247,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
   useEffect(() => {
     if (!freeResult) {
       const defaultQ = FREE_PRESETS[0].query;
-      const res = SqlEngine.execute(defaultQ, { context: 'portfolio' });
+      const res = SqlEngine.execute(defaultQ, { context: 'portfolio', locale });
       setFreeResult(res);
     }
   }, [freeResult]);
@@ -277,14 +285,19 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
     setIsContentFading(true);
 
     setTimeout(() => {
-      const res = SqlEngine.execute(q, { context: 'challenge' });
+      const res = SqlEngine.execute(q, { context: 'challenge', locale });
       setChallengeResult(res);
       setIsContentFading(false);
 
       if (res.type === 'ERROR') {
         setChallengeFeedback({
           success: false,
-          message: res.errorMessage || 'Error de sintaxis al procesar la instrucción.',
+          message:
+            res.errorMessage ||
+            tx(
+              'Error de sintaxis al procesar la instrucción.',
+              'Syntax error while processing the statement.'
+            ),
         });
         canvasBackgroundRef.current?.triggerQueryRipple('incorrect', 1);
         return;
@@ -453,7 +466,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
 
     setIsContentFading(true);
     setTimeout(() => {
-      const res = SqlEngine.execute(q, { context: 'portfolio' });
+      const res = SqlEngine.execute(q, { context: 'portfolio', locale });
       setFreeResult(res);
       setFreePage(1);
       setShowAllColumns(false);
@@ -580,7 +593,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
           aria-hidden="true"
           className="absolute bottom-3 right-4 sm:right-8 lg:right-12 z-20 pointer-events-none transition-opacity duration-500 font-mono text-[10.5px] text-white/35"
         >
-          Haz clic en el fondo
+          {tx('Haz clic en el fondo', 'Click the background')}
         </div>
       )}
 
@@ -597,26 +610,35 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
           >
             <div>
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#ff3e00] font-bold block mb-0.5">
-                05 / LABORATORIO SQL
+                 {tx('05 / LABORATORIO SQL', '05 / SQL LAB')}
+
               </span>
               <h2 className="font-display font-light text-2xl sm:text-3xl lg:text-[36px] text-white tracking-tight leading-none">
-                Find the mismatch.
+                {t('section.console')}
               </h2>
               {/* Línea descriptiva + Enlace directo a Contacto */}
               <div className="flex flex-wrap items-center gap-3 mt-1 text-[11px] font-mono text-white/50">
-                <span>5 niveles · unos 3 minutos · con pistas y modo guiado</span>
+                <span>
+                  {tx(
+                    '5 niveles · unos 3 minutos · con pistas y modo guiado',
+                    '5 levels · about 3 minutes · with hints and guided mode'
+                  )}
+                </span>
                 <span className="text-white/20">|</span>
                 <button
                   type="button"
                   onClick={() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' })}
                   className="text-white/40 hover:text-[#ff3e00] underline transition-colors cursor-pointer"
                 >
-                  ¿Sin tiempo? Ir a Contacto →
+                  {tx('¿Sin tiempo? Ir a Contacto →', 'No time? Go to Contact →')}
                 </button>
               </div>
             </div>
             <p className="font-sans text-xs text-[#a1a1aa] max-w-md leading-relaxed hidden md:block">
-              Un caso corto con datos ficticios: resuélvelo con SQL, o explora mi información en la consola libre.
+              {tx(
+                'Un caso corto con datos ficticios: resuélvelo con SQL, o explora mi información en la consola libre.',
+                'A short case with fictional data: solve it with SQL, or explore my information in the free console.'
+              )}
             </p>
           </div>
         </ScrollReveal>
@@ -628,7 +650,10 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
           ref={tablistRef}
           data-no-ripple="true"
           role="tablist"
-          aria-label="Modos de operación del laboratorio SQL"
+          aria-label={tx(
+            'Modos de operación del laboratorio SQL',
+            'SQL lab operation modes'
+          )}
           onKeyDown={handleTabKeyDown}
           className="flex items-center gap-2 flex-shrink-0"
         >
@@ -655,7 +680,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 : 'bg-[#0c0d0f] text-white/60 hover:text-white hover:bg-[#1a1b1f] border border-white/[0.10]'
             }`}
           >
-            Desafío
+            {tx('Desafío', 'Challenge')}
           </button>
           <button
             role="tab"
@@ -680,7 +705,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 : 'bg-[#0c0d0f] text-white/60 hover:text-white hover:bg-[#1a1b1f] border border-white/[0.10]'
             }`}
           >
-            Consola libre
+            {tx('Consola libre', 'Free console')}
           </button>
         </div>
 
@@ -704,20 +729,22 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-[#ff3e00]" />
                   <span className="text-[11px] font-mono uppercase tracking-wider text-white font-bold">
-                    Expediente
+                    {tx('Expediente', 'Case file')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded bg-white/[0.06] font-mono text-[10px] text-[#ff3e00] font-semibold">
-                    Nivel {currentLevel.id}/5
+                    {tx('Nivel', 'Level')} {currentLevel.id}/5
                   </span>
                   <button
                     type="button"
                     onClick={() => setIsExpedienteOpenMobile(!isExpedienteOpenMobile)}
                     className="lg:hidden text-[10px] font-mono text-white/60 hover:text-white px-1.5 py-0.5 border border-white/10 rounded"
-                    aria-label="Alternar expediente en móvil"
+                    aria-label={tx('Alternar expediente en móvil', 'Toggle case file on mobile')}
                   >
-                    {isExpedienteOpenMobile ? 'Ocultar' : 'Ver'}
+                    {isExpedienteOpenMobile
+                      ? tx('Ocultar', 'Hide')
+                      : tx('Ver', 'Show')}
                   </button>
                 </div>
               </div>
@@ -738,7 +765,8 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                   </p>
                   <div className="bg-[#0c0d0f]/60 rounded-lg p-1.5 border border-white/[0.06] font-mono text-[10px]">
                     <span className="text-white/40 block text-[9px] uppercase tracking-wider mb-0.5">
-                      Tabla: <strong className="text-[#ff3e00]">{currentLevel.tableSchema.name}</strong>
+                      {tx('Tabla:', 'Table:')}{' '}
+                      <strong className="text-[#ff3e00]">{currentLevel.tableSchema.name}</strong>
                     </span>
                     <span className="text-white/70 block leading-tight truncate">
                       {currentLevel.tableSchema.columns}
@@ -750,7 +778,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 <div className="space-y-1.5 pt-1 border-t border-white/[0.06] flex-shrink-0">
                   <div className="flex items-center justify-between gap-1.5">
                     <span className="text-[10px] font-mono text-white/40 uppercase">
-                      Pistas ({revealedHints}/{currentLevel.hints.length})
+                      {tx('Pistas', 'Hints')} ({revealedHints}/{currentLevel.hints.length})
                     </span>
                     <div className="flex items-center gap-1.5">
                       {revealedHints < currentLevel.hints.length && (
@@ -759,7 +787,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                           onClick={handleRevealNextHint}
                           className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.06] hover:bg-white/[0.12] text-white/90 hover:text-white border border-white/10 transition-colors cursor-pointer"
                         >
-                          + Pista {revealedHints + 1}
+                          + {tx('Pista', 'Hint')} {revealedHints + 1}
                         </button>
                       )}
                       <button
@@ -767,9 +795,14 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                         disabled={isSolvingForMe}
                         onClick={handleSolveForMe}
                         className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#ff3e00]/15 hover:bg-[#ff3e00]/25 text-[#ff3e00] hover:text-white border border-[#ff3e00]/30 transition-all cursor-pointer disabled:opacity-40"
-                        title="Escribe la solución y resuelve automáticamente"
+                        title={tx(
+                          'Escribe la solución y resuelve automáticamente',
+                          'Types the solution and solves it automatically'
+                        )}
                       >
-                        {isSolvingForMe ? 'Escribiendo...' : 'Resolver por mí'}
+                        {isSolvingForMe
+                          ? tx('Escribiendo...', 'Typing...')
+                          : tx('Resolver por mí', 'Solve for me')}
                       </button>
                     </div>
                   </div>
@@ -789,8 +822,8 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 {/* Vista previa de datos (3 primeras filas de la tabla relevante) */}
                 <div className="hidden min-[720px]:block bg-[#0c0d0f]/40 rounded-lg p-2 border border-white/[0.05] font-mono text-[10px] flex-shrink-0">
                   <div className="text-[9px] uppercase tracking-wider text-white/35 mb-1 flex items-center justify-between">
-                    <span>Muestra de datos (3 filas)</span>
-                    <span className="text-white/20">Solo lectura</span>
+                    <span>{tx('Muestra de datos (3 filas)', 'Data sample (3 rows)')}</span>
+                    <span className="text-white/20">{tx('Solo lectura', 'Read only')}</span>
                   </div>
                   <div className="space-y-1 divide-y divide-white/[0.03]">
                     {previewRows.map((row, rIdx) => (
@@ -809,13 +842,16 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
 
                 {/* Footer del Expediente con métricas discretas y reinicio */}
                 <div className="flex items-center justify-between pt-1 border-t border-white/[0.06] text-[10px] font-mono text-white/40 flex-shrink-0">
-                  <span>Pistas: {hintsUsedTotal} · Ayudas: {helpedLevelsCount}</span>
+                  <span>
+                    {tx('Pistas', 'Hints')}: {hintsUsedTotal} · {tx('Ayudas', 'Assists')}:{' '}
+                    {helpedLevelsCount}
+                  </span>
                   <button
                     type="button"
                     onClick={handleRestartChallenge}
                     className="text-white/50 hover:text-[#ff3e00] transition-colors cursor-pointer"
                   >
-                    Reiniciar caso
+                    {tx('Reiniciar caso', 'Restart case')}
                   </button>
                 </div>
               </div>
@@ -831,7 +867,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 <div className="flex items-center gap-2">
                   <div className="flex-1 min-w-0">
                     <label htmlFor="challenge-query-input" className="sr-only">
-                      Consulta SQL para el desafío
+                      {tx('Consulta SQL para el desafío', 'SQL query for the challenge')}
                     </label>
                     <input
                       id="challenge-query-input"
@@ -839,7 +875,10 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       type="text"
                       readOnly={isSolvingForMe}
                       value={challengeInputVal}
-                      placeholder={`Escribe SQL sobre '${currentLevel.targetTable}'...`}
+                      placeholder={tx(
+                        `Escribe SQL sobre '${currentLevel.targetTable}'...`,
+                        `Write SQL against '${currentLevel.targetTable}'...`
+                      )}
                       onChange={(e) => setChallengeInputVal(e.target.value)}
                       onKeyDown={handleChallengeInputKeyDown}
                       className="w-full bg-transparent font-mono text-xs text-white placeholder-white/30 focus:outline-none"
@@ -855,14 +894,14 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                         : 'bg-[#ff3e00] hover:bg-[#e03700]'
                     }`}
                   >
-                    Ejecutar
+                    {tx('Ejecutar', 'Run')}
                   </button>
                 </div>
 
                 {/* Fila Inferior de Barra: Chip Ejemplo y Etiqueta Ficticia */}
                 <div className="flex flex-wrap items-center justify-between gap-1.5 pt-1 border-t border-white/[0.05] text-[10.5px] font-mono">
                   <div className="flex items-center gap-1.5 truncate">
-                    <span className="text-white/40">Ejemplo:</span>
+                    <span className="text-white/40">{tx('Ejemplo:', 'Example:')}</span>
                     <button
                       type="button"
                       onClick={() => {
@@ -870,13 +909,19 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                         challengeInputRef.current?.focus();
                       }}
                       className="px-2 py-0.5 rounded bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] truncate transition-colors cursor-pointer"
-                      title="Copia una consulta de sintaxis similar al input sin ejecutarla"
+                      title={tx(
+                        'Copia una consulta de sintaxis similar al input sin ejecutarla',
+                        'Copies a query with similar syntax into the input without running it'
+                      )}
                     >
                       {currentLevel.exampleQuery}
                     </button>
                   </div>
                   <span className="text-white/35 text-[9.5px] flex-shrink-0">
-                    Datos ficticios · no corresponden a ningún cliente real
+                    {tx(
+                      'Datos ficticios · no corresponden a ningún cliente real',
+                      'Fictional data · not associated with any real client'
+                    )}
                   </span>
                 </div>
               </div>
@@ -892,12 +937,14 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                   <div className="flex items-center gap-2 truncate mr-2">
                     <span className="text-[#ff3e00] font-bold">AUDIT&gt;</span>
                     <span className="text-white/80 truncate text-xs">
-                      {challengeResult ? challengeResult.query : `Nivel ${currentLevel.id}: Esperando ejecución`}
+                      {challengeResult
+                        ? challengeResult.query
+                        : `${tx('Nivel', 'Level')} ${currentLevel.id}: ${tx('Esperando ejecución', 'Awaiting execution')}`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2.5 flex-shrink-0">
                     <span className="text-[#a1a1aa] text-[11px]">
-                      {challengeResult?.totalRows ?? 0} {challengeResult?.totalRows === 1 ? 'fila' : 'filas'}
+                      {challengeResult?.totalRows ?? 0} {challengeResult?.totalRows === 1 ? tx('fila', 'row') : tx('filas', 'rows')}
                     </span>
                     <button
                       type="button"
@@ -905,7 +952,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       disabled={!challengeResult?.rows}
                       className="px-2 py-0.5 rounded border border-white/10 hover:border-white/30 bg-white/[0.04] text-[10px] font-mono text-white/80 hover:text-white transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     >
-                      {copied ? 'Copiado' : 'Copiar JSON'}
+                      {copied ? tx('Copiado', 'Copied') : tx('Copiar JSON', 'Copy JSON')}
                     </button>
                   </div>
                 </div>
@@ -923,13 +970,17 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                         <Checkmark className="w-4 h-4" />
                       </div>
                       <h4 className="text-base font-mono text-white font-bold">
-                        Caso cerrado
+                        {tx('Caso cerrado', 'Case closed')}
                       </h4>
                       <p className="text-xs font-sans text-white/80 max-w-md leading-relaxed">
-                        Encontraste el movimiento duplicado. Muchas veces un descuadre es algo así: un detalle pequeño escondido entre muchos movimientos.
+                        {tx(
+                          'Encontraste el movimiento duplicado. Muchas veces un descuadre es algo así: un detalle pequeño escondido entre muchos movimientos.',
+                          'You found the duplicate transaction. Often a mismatch is just like this: a small detail hidden among many transactions.'
+                        )}
                       </p>
                       <span className="text-[10.5px] font-mono text-white/50 block">
-                        Pistas consultadas: {hintsUsedTotal} · Niveles con ayuda: {helpedLevelsCount}
+                        {tx('Pistas consultadas', 'Hints viewed')}: {hintsUsedTotal} ·{' '}
+                        {tx('Niveles con ayuda', 'Levels with help')}: {helpedLevelsCount}
                       </span>
                       <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
                         <button
@@ -937,21 +988,21 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                           onClick={() => document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' })}
                           className="px-3 py-1 rounded-lg bg-[#ff3e00] hover:bg-[#e03700] text-white text-xs font-mono font-semibold transition-all cursor-pointer"
                         >
-                          Ir a Contacto
+                          {tx('Ir a Contacto', 'Go to Contact')}
                         </button>
                         <button
                           type="button"
                           onClick={() => setActiveTab('free')}
                           className="px-3 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.14] text-white text-xs font-mono transition-all cursor-pointer"
                         >
-                          Seguir en consola libre
+                          {tx('Seguir en consola libre', 'Continue in free console')}
                         </button>
                         <button
                           type="button"
                           onClick={handleRestartChallenge}
                           className="px-3 py-1 rounded-lg border border-white/10 text-white/70 hover:text-white text-xs font-mono transition-all cursor-pointer"
                         >
-                          Reiniciar caso
+                          {tx('Reiniciar caso', 'Restart case')}
                         </button>
                       </div>
                     </div>
@@ -993,7 +1044,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                                 }}
                                 tabIndex={isDuplicateRow ? 0 : -1}
                                 role={isDuplicateRow ? 'button' : undefined}
-                                aria-label={isDuplicateRow ? `Transacción duplicada de depósito id ${row.id}` : undefined}
+                                aria-label={isDuplicateRow ? tx(`Transacción duplicada de depósito id ${row.id}`, `Duplicate deposit transaction id ${row.id}`) : undefined}
                                 className={`transition-colors ${
                                   isHighlighted
                                     ? 'bg-[#ff3e00]/25 text-white font-semibold'
@@ -1020,7 +1071,10 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       <p className="text-xs font-mono text-white/40">
                         {challengeFeedback
                           ? challengeFeedback.message
-                          : "Escribe una instrucción SQL y presiona 'Ejecutar' o prueba el botón 'Resolver por mí'."}
+                          : tx(
+                              "Escribe una instrucción SQL y presiona 'Ejecutar' o prueba el botón 'Resolver por mí'.",
+                              "Type an SQL statement and press 'Run' or try the 'Solve for me' button."
+                            )}
                       </p>
                     </div>
                   )}
@@ -1040,7 +1094,9 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       </span>
                     ) : (
                       <span className="text-white/40 text-[11px]">
-                        {challengeResult ? `${challengeResult.executionTimeMs} ms` : 'Modo Desafío'}
+                        {challengeResult
+                          ? `${challengeResult.executionTimeMs} ms`
+                          : tx('Modo Desafío', 'Challenge mode')}
                       </span>
                     )}
                   </div>
@@ -1051,7 +1107,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       onClick={handleNextLevel}
                       className="px-3 py-1 rounded bg-[#ff3e00] hover:bg-[#e03700] text-white font-mono text-[11px] font-semibold transition-all cursor-pointer flex-shrink-0 shadow-sm"
                     >
-                      Siguiente nivel →
+                      {tx('Siguiente nivel', 'Next level')} →
                     </button>
                   )}
                 </div>
@@ -1081,14 +1137,17 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 </span>
                 <div className="flex-1 min-w-0">
                   <label htmlFor="free-query-input" className="sr-only">
-                    Instrucción SQL libre
+                    {tx('Instrucción SQL libre', 'Free SQL statement')}
                   </label>
                   <input
                     id="free-query-input"
                     ref={freeInputRef}
                     type="text"
                     value={freeInputVal}
-                    placeholder="Escribe SELECT, SHOW TABLES o HELP..."
+                    placeholder={tx(
+                      'Escribe SELECT, SHOW TABLES o HELP...',
+                      'Type SELECT, SHOW TABLES or HELP...'
+                    )}
                     onChange={(e) => setFreeInputVal(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
@@ -1104,7 +1163,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                   onClick={() => handleRunFreeQuery()}
                   className="px-3 py-1 rounded-lg bg-[#ff3e00] hover:bg-[#e03700] text-white font-mono text-xs font-semibold transition-all cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-white flex-shrink-0"
                 >
-                  Ejecutar
+                  {tx('Ejecutar', 'Run')}
                 </button>
               </div>
 
@@ -1148,19 +1207,19 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       className="text-[10.5px] text-[#ff3e00] hover:underline cursor-pointer"
                     >
                       {showAllColumns
-                        ? 'Ver 6 principales'
-                        : `Ver todas las columnas (${allFreeColumns.length})`}
+                        ? tx('Ver 6 principales', 'View top 6')
+                        : tx(`Ver todas las columnas (${allFreeColumns.length})`, `View all columns (${allFreeColumns.length})`)}
                     </button>
                   )}
                   <span className="text-[#a1a1aa] text-[11px]">
-                    {freeTotalRows} {freeTotalRows === 1 ? 'fila' : 'filas'}
+                    {freeTotalRows} {freeTotalRows === 1 ? tx('fila', 'row') : tx('filas', 'rows')}
                   </span>
                   <button
                     type="button"
                     onClick={handleCopyJSON}
                     className="px-2.5 py-0.5 rounded border border-white/10 hover:border-white/30 bg-white/[0.04] text-[10px] text-white transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#ff3e00]"
                   >
-                    {copied ? 'Copiado' : 'Copiar JSON'}
+                    {copied ? tx('Copiado', 'Copied') : tx('Copiar JSON', 'Copy JSON')}
                   </button>
                 </div>
               </div>
@@ -1245,7 +1304,10 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                                           }
                                         }}
                                         className="text-left w-full truncate line-clamp-2 hover:text-[#ff3e00] transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#ff3e00]"
-                                        title="Click o Enter para expandir contenido completo"
+                                        title={tx(
+                                          'Click o Enter para expandir contenido completo',
+                                          'Click or Enter to expand full content'
+                                        )}
                                       >
                                         {strVal}
                                       </button>
@@ -1265,25 +1327,25 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                         <div
                           className="absolute inset-x-4 top-4 bottom-4 bg-[#181a20] border border-white/20 rounded-lg p-3 z-30 shadow-2xl flex flex-col justify-between font-mono text-xs animate-fadeIn"
                           role="dialog"
-                          aria-label={`Detalle completo de ${activeCellPopover.colKey}`}
+                          aria-label={tx(`Detalle completo de ${activeCellPopover.colKey}`, `Full details for ${activeCellPopover.colKey}`)}
                         >
                           <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
                             <span className="text-[#ff3e00] text-[10.5px] uppercase font-bold">
-                              Columna: {activeCellPopover.colKey}
+                              {tx('Columna:', 'Column:')} {activeCellPopover.colKey}
                             </span>
                             <button
                               type="button"
                               onClick={() => setActiveCellPopover(null)}
                               className="text-white/60 hover:text-white px-2 py-0.5 rounded text-xs bg-white/5 cursor-pointer"
                             >
-                              Cerrar (Esc)
+                              {tx('Cerrar (Esc)', 'Close (Esc)')}
                             </button>
                           </div>
                           <div className="flex-1 overflow-y-auto my-2 text-white/90 text-[11px] leading-relaxed break-words">
                             {activeCellPopover.content}
                           </div>
                           <span className="text-[10px] text-white/40">
-                            Presiona Esc o Cerrar para regresar
+                            {tx('Presiona Esc o Cerrar para regresar', 'Press Esc or Close to go back')}
                           </span>
                         </div>
                       )}
@@ -1292,7 +1354,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                 ) : (
                   <div className="h-full flex items-center justify-center p-3 text-center">
                     <p className="text-xs font-mono text-[#a1a1aa]">
-                      {freeResult?.errorMessage || '0 filas devueltas.'}
+                      {freeResult?.errorMessage || tx('0 filas devueltas.', '0 rows returned.')}
                     </p>
                   </div>
                 )}
@@ -1302,7 +1364,7 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
               <div className="pt-1.5 border-t border-white/[0.06] flex items-center justify-between text-[11px] font-mono flex-shrink-0">
                 <div className="flex items-center gap-2 text-white/60">
                   <span>
-                    {freeTotalRows} {freeTotalRows === 1 ? 'fila' : 'filas'} ·{' '}
+                    {freeTotalRows} {freeTotalRows === 1 ? tx('fila', 'row') : tx('filas', 'rows')} ·{' '}
                     {freeResult?.executionTimeMs ?? 1} ms
                   </span>
                 </div>
@@ -1316,10 +1378,10 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       onClick={() => setFreePage((p) => Math.max(1, p - 1))}
                       className="px-2 py-0.5 rounded bg-white/[0.04] hover:bg-white/[0.08] disabled:opacity-25 disabled:cursor-not-allowed text-white/80 transition-colors cursor-pointer"
                     >
-                      ← Ant
+                      ← {tx('Ant', 'Prev')}
                     </button>
                     <span className="text-white/40 text-[10px]">
-                      {freePage} de {freeTotalPages}
+                      {freePage} {tx('de', 'of')} {freeTotalPages}
                     </span>
                     <button
                       type="button"
@@ -1327,12 +1389,14 @@ export const SqlConsolePage: React.FC<SqlConsolePageProps> = ({
                       onClick={() => setFreePage((p) => Math.min(freeTotalPages, p + 1))}
                       className="px-2 py-0.5 rounded bg-white/[0.04] hover:bg-white/[0.08] disabled:opacity-25 disabled:cursor-not-allowed text-white/80 transition-colors cursor-pointer"
                     >
-                      Sig →
+                      {tx('Sig', 'Next')} →
                     </button>
                   </div>
                 )}
 
-                <span className="text-white/40 text-[10.5px]">Consulta de solo lectura</span>
+                <span className="text-white/40 text-[10.5px]">
+                  {tx('Consulta de solo lectura', 'Read-only query')}
+                </span>
               </div>
             </div>
           </div>

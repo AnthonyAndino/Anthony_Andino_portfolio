@@ -797,30 +797,30 @@ export const HERO_PHRASE_LIMITS = {
 export const HOME_HERO_DATA: HomeHeroData = {
   tags: ["DATA INTEGRITY", "SQL AUDIT", "STORED PROCEDURES", "BI"],
   greeting: {
-    line1: "Hi,",
-    line2: "I'm Anthony Andino.",
+    line1: "Hola,",
+    line2: "Soy Anthony Andino.",
   },
   phraseIntervalMs: PHRASE_INTERVAL_MS,
   phrases: [
     {
-      line1: "Turn",
-      line2: "raw data",
-      line3: "into truth",
+      line1: "Datos",
+      line2: "crudos",
+      line3: "en verdad",
     },
     {
-      line1: "Audit",
-      line2: "every record",
-      line3: "to zero",
+      line1: "Audita",
+      line2: "cada dato",
+      line3: "hasta cero",
     },
     {
-      line1: "Build",
+      line1: "Crea",
       line2: "dashboards",
-      line3: "that count",
+      line3: "que suman",
     },
     {
-      line1: "Catch",
-      line2: "the mismatch",
-      line3: "early",
+      line1: "Detecta",
+      line2: "la falla",
+      line3: "a tiempo",
     },
   ],
   columns: [
@@ -844,7 +844,7 @@ export const HOME_HERO_DATA: HomeHeroData = {
     },
   ],
   scrollCta: {
-    label: "Explore my work",
+    label: "Explora mi trabajo",
     targetSection: "work",
   },
   parallax: {

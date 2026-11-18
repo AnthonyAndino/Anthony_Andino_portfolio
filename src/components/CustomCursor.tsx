@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface CustomCursorProps {
   color?: string; // default: #ff3e00
@@ -11,6 +12,7 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({
   sizeDefault = 26,
   sizeHovered = 52,
 }) => {
+  const { t } = useLanguage();
   const [isTouchDevice, setIsTouchDevice] = useState<boolean>(true);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isInputHovered, setIsInputHovered] = useState<boolean>(false);
@@ -170,7 +172,7 @@ export const CustomCursor: React.FC<CustomCursorProps> = ({
     }
   }
 
-  const displayText = cursorText || (isInputHovered ? 'TYPE' : 'GO');
+  const displayText = cursorText || (isInputHovered ? t('cursor.type') : t('cursor.go'));
 
   return (
     <div

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { PORTFOLIO_DB, CORE_SKILLS, RELATED_SKILLS } from '../data/portfolioData';
+import { useLanguage } from '../i18n/LanguageContext';
+import { usePortfolioData } from '../i18n/usePortfolioData';
 import { ArrowRight } from '../components/Icons';
 
 interface SkillsPageProps {
@@ -270,6 +271,9 @@ class DirectionBag {
 }
 
 export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
+  const { t, tx } = useLanguage();
+  const { PORTFOLIO_DB, CORE_SKILLS, RELATED_SKILLS } = usePortfolioData();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const bgDotsRef = useRef<SVGGElement | null>(null);
@@ -1302,16 +1306,16 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
 
       {/* Invisible Screen Reader Navigation Tree for Full Accessibility */}
       <div className="sr-only">
-        <h2>Capacidades Técnicas y Stack Tecnológico (Esfera 3D Interactiva)</h2>
+        <h2>{tx('Capacidades Técnicas y Stack Tecnológico (Esfera 3D Interactiva)', 'Technical Skills and Technology Stack (Interactive 3D Sphere)')}</h2>
         {PORTFOLIO_DB.habilidades.map((cat) => (
           <div key={cat.id}>
             <h3>
-              {cat.categoria} (Nivel {cat.nivel}, {cat.habilidades.length} habilidades)
+              {cat.categoria} ({tx('Nivel', 'Level')} {cat.nivel}, {cat.habilidades.length} {tx('habilidades', 'skills')})
             </h3>
             <ul>
               {cat.habilidades.map((h) => (
                 <li key={h}>
-                  {h} {CORE_SKILLS.has(h) ? '(Habilidad Core)' : ''}
+                  {h} {CORE_SKILLS.has(h) ? t('skills.core') : ''}
                 </li>
               ))}
             </ul>
@@ -1326,13 +1330,13 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
         <div className="border-b border-white/10 pb-2 sm:pb-2.5 flex-shrink-0">
           <div className="flex items-center gap-2 mb-0.5">
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#ff3e00] font-bold">
-              03 / CAPACIDADES TÉCNICAS & STACK
+              {t('skills.section')}
             </span>
           </div>
 
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl text-white tracking-tight">
-              Skills & Stack
+              {t('section.skills')}
             </h2>
 
             <div className="flex items-center gap-2 font-mono text-xs text-[#a1a1aa] flex-shrink-0">
@@ -1342,7 +1346,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
           </div>
 
           <p className="font-sans text-xs text-[#a1a1aa] mt-0.5 leading-snug">
-            Consultas SQL avanzadas, optimización de Stored Procedures, modelado relacional y dashboards ejecutivos.
+            {tx('Consultas SQL avanzadas, optimización de Stored Procedures, modelado relacional y dashboards ejecutivos.', 'Advanced SQL queries, Stored Procedures optimization, relational modeling, and executive dashboards.')}
           </p>
         </div>
 
@@ -1356,7 +1360,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
-            data-cursor-text={hoveredNodeId ? 'VER' : 'ARRASTRA'}
+            data-cursor-text={hoveredNodeId ? tx('VER', 'VIEW') : tx('ARRASTRA', 'DRAG')}
             data-cursor-bg="#ff3e00"
             className="w-full h-full block touch-none cursor-grab active:cursor-grabbing outline-none"
           />
@@ -1370,7 +1374,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
               }}
               type="button"
               tabIndex={0}
-              aria-label={`${cat.categoria}, nivel ${cat.nivel}, ${cat.habilidades.length} habilidades`}
+              aria-label={`${cat.categoria}, ${tx('nivel', 'level')} ${cat.nivel}, ${cat.habilidades.length} ${tx('habilidades', 'skills')}`}
               onFocus={() => {
                 hoverNodeRef.current = `hub-${cat.id}`;
                 hoveredCategoryRef.current = cat.id;
@@ -1421,8 +1425,8 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
                   <button
                     type="button"
                     onClick={deselectCategory}
-                    aria-label="Cerrar ficha"
-                    data-cursor-text="CERRAR"
+                    aria-label={tx('Cerrar ficha', 'Close card')}
+                    data-cursor-text={tx('CERRAR', 'CLOSE')}
                     data-cursor-bg="#ff3e00"
                     className="w-5 h-5 flex items-center justify-center rounded-full text-[#a1a1aa] hover:text-white hover:bg-white/10 transition-colors text-xs font-mono cursor-pointer"
                   >
@@ -1525,21 +1529,21 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onOpenQuery }) => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-[#ff3e00] inline-block" />
-              <span>Avanzado</span>
+              <span>{tx('Avanzado', 'Advanced')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full border-2 border-[#ff3e00] inline-block" />
-              <span>Intermedio</span>
+              <span>{tx('Intermedio', 'Intermediate')}</span>
             </div>
             <div className="flex items-center gap-1.5 border-l border-white/10 pl-4">
               <span className="w-2 h-2 rounded-full bg-white inline-block shadow-sm" />
-              <span className="font-bold text-white">Core</span>
+              <span className="font-bold text-white">{t('skills.legendCore')}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-[11px] text-[#71717a]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff3e00] animate-pulse" />
-            <span>Arrastra para girar · Clic en una categoría</span>
+            <span>{tx('Arrastra para girar · Clic en una categoría', 'Drag to rotate · Click a category')}</span>
           </div>
         </div>
       </div>

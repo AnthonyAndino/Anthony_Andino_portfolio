@@ -1,10 +1,10 @@
-# 📊 Anthony Andino — Portfolio Editorial de Analista de Datos
+# Anthony Andino — Portfolio Editorial de Analista de Datos
 
 Portfolio interactivo de alta gama para **Anthony Jafed Andino Marinero**, Licenciado en Informática Administrativa y Analista de Datos. Diseñado con una estética **editorial suiza y arquitectónica** (inspirada en *Edison Fang Workshop*), combinando tipografía de gran escala, fondo marfil cálido y un motor de consultas SQL interactivo.
 
 ---
 
-## ✨ Características Principales
+## Características Principales
 
 1. **Diseño Editorial Suizo & Arquitectónico**:
    - Fondo cálido marfil/lino (`#f7f6f2`), tipografía display escalonada y micro-etiquetas verticales.
@@ -33,34 +33,9 @@ Portfolio interactivo de alta gama para **Anthony Jafed Andino Marinero**, Licen
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 - **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Lenguaje**: [TypeScript](https://www.typescriptlang.org/) (Tipado estricto)
 - **Estilos**: [Tailwind CSS](https://tailwindcss.com/)
 - **Fuentes**: Plus Jakarta Sans, Space Grotesk, JetBrains Mono
-- **Deploy**: Listo para [Vercel](https://vercel.com/) con `vercel.json`
-
----
-
-## 💻 Ejecución Local
-
-```bash
-# 1. Instalar dependencias
-npm install
-
-# 2. Iniciar servidor local
-npm run dev
-
-# 3. Compilar para producción
-npm run build
-```
-
----
-
-## 🌐 Despliegue en Vercel
-
-```bash
-npx vercel
-```
-O conectando tu repositorio de GitHub directamente en [vercel.com](https://vercel.com).

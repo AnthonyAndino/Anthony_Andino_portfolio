@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface IntroSignatureProps {
   onComplete: () => void;
@@ -10,6 +11,7 @@ interface IntroSignatureProps {
  * Runs once per session (sessionStorage), skippable via click or any key.
  */
 export const IntroSignature: React.FC<IntroSignatureProps> = ({ onComplete }) => {
+  const { t, tx } = useLanguage();
   const [isDismissing, setIsDismissing] = useState<boolean>(false);
   const [signatureDrawn, setSignatureDrawn] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -68,7 +70,7 @@ export const IntroSignature: React.FC<IntroSignatureProps> = ({ onComplete }) =>
       className={`fixed inset-0 z-[1000] bg-[#0c0d0f] text-[#f4f1ea] flex flex-col items-center justify-center cursor-pointer select-none transition-opacity duration-500 ease-out ${
         isDismissing ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      aria-label="Introducción. Clic para saltar"
+      aria-label={t('intro.aria')}
     >
       {/* Background subtle grid pattern */}
       <div
@@ -82,7 +84,7 @@ export const IntroSignature: React.FC<IntroSignatureProps> = ({ onComplete }) =>
       <div className="relative max-w-xl w-full px-6 flex flex-col items-center">
         {/* Category tag */}
         <div className="text-[10px] font-mono tracking-[0.3em] text-[#ff3e00] uppercase mb-4 opacity-80 animate-fade-in">
-          DATA ANALYTICS & DATABASE AUDITING
+          {t('intro.category')}
         </div>
 
         {/* 
@@ -136,14 +138,14 @@ export const IntroSignature: React.FC<IntroSignatureProps> = ({ onComplete }) =>
             ANTHONY JAFED ANDINO
           </h1>
           <p className="font-mono text-xs text-[#a1a1aa] tracking-widest uppercase">
-            LICENCIADO EN INFORMÁTICA ADMINISTRATIVA · UNAH
+            {tx('LICENCIADO EN INFORMÁTICA ADMINISTRATIVA · UNAH', "BACHELOR OF COMPUTER SCIENCE · UNAH")}
           </p>
         </div>
 
         {/* Skip instruction */}
         <div className="mt-12 flex items-center gap-2 text-[11px] font-mono text-[#71717a] hover:text-[#f4f1ea] transition-colors">
           <span className="w-1.5 h-1.5 rounded-full bg-[#ff3e00] animate-ping" />
-          <span>PRESIONA CUALQUIER TECLA O HAZ CLIC PARA ENTRAR</span>
+          <span>{tx('PRESIONA CUALQUIER TECLA O HAZ CLIC PARA ENTRAR', 'PRESS ANY KEY OR CLICK TO ENTER')}</span>
         </div>
       </div>
 

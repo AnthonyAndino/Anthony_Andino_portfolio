@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { CONTACT_DATA } from '../data/portfolioData';
+import { useLanguage } from '../i18n/LanguageContext';
+import { usePortfolioData } from '../i18n/usePortfolioData';
 import { ScrollReveal } from './ScrollReveal';
 
 interface ContactSectionProps {
@@ -62,6 +63,8 @@ const ArrowUpIcon: React.FC<{ className?: string }> = ({ className }) => (
 );
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, onScrollToHome }) => {
+  const { tx } = useLanguage();
+  const { CONTACT_DATA } = usePortfolioData();
   const [copied, setCopied] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const signatureRef = useRef<SVGPathElement>(null);
@@ -95,7 +98,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
     } catch {
       // Silent fail
     }
-  }, [copied]);
+  }, [copied, CONTACT_DATA.email]);
 
   // ─── Position signature in the free band between pills and footer ───
   useEffect(() => {
@@ -234,7 +237,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
           <ScrollReveal delay={50} direction="up">
             <div className="border-b border-white/10 pb-2 sm:pb-2.5 flex-shrink-0">
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#ff3e00] font-bold block mb-0.5">
-                06 / CONTACTO
+                {tx('06 / CONTACTO', '06 / CONTACT')}
               </span>
               <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white tracking-tight">
                 Get in{' '}
@@ -281,22 +284,22 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
                       type="button"
                       onClick={handleCopyEmail}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/15 text-[11px] font-mono text-white/60 hover:text-white hover:border-white/30 transition-all cursor-pointer flex-shrink-0"
-                      aria-label={copied ? 'Correo copiado' : 'Copiar correo'}
+                      aria-label={copied ? tx('Correo copiado', 'Email copied') : tx('Copiar correo', 'Copy email')}
                     >
                       {copied ? (
                         <>
                           <CheckIcon className="w-3.5 h-3.5 text-[#ff3e00]" />
-                          <span>Copiado</span>
+                          <span>{tx('Copiado', 'Copied')}</span>
                         </>
                       ) : (
                         <>
                           <CopyIcon className="w-3.5 h-3.5" />
-                          <span>Copiar</span>
+                          <span>{tx('Copiar', 'Copy')}</span>
                         </>
                       )}
                     </button>
                     <span aria-live="polite" className="sr-only">
-                      {copied ? 'Correo copiado al portapapeles' : ''}
+                      {copied ? tx('Correo copiado al portapapeles', 'Email copied to clipboard') : ''}
                     </span>
                   </div>
 
@@ -310,7 +313,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={`${link.label} (se abre en una pestaña nueva)`}
+                          aria-label={`${link.label} ${tx('(se abre en una pestaña nueva)', '(opens in a new tab)')}`}
                           className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 text-xs font-mono text-white/80 hover:text-white hover:border-white/30 transition-all"
                         >
                           {Icon && <Icon className="w-4 h-4" />}
@@ -322,11 +325,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
                     <a
                       href="/Anthony-Andino-CV.pdf"
                       download="Anthony-Andino-CV.pdf"
-                      aria-label="Descargar CV de Anthony Andino (PDF, se abre en una pestaña nueva)"
+                      aria-label={tx('Descargar CV de Anthony Andino (PDF, se abre en una pestaña nueva)', "Download Anthony Andino's CV (PDF, opens in a new tab)")}
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/15 text-xs font-mono text-white/80 hover:text-white hover:border-white/30 transition-all"
                     >
                       <DownloadIcon className="w-4 h-4" />
-                      <span>Descargar CV</span>
+                      <span>{tx('Descargar CV', 'Download CV')}</span>
                     </a>
                   </div>
                 </div>
@@ -340,7 +343,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
                     data-cursor-contrast="true"
                     className="group w-full lg:w-auto inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-[#ff3e00] hover:bg-[#e03700] text-white font-mono text-sm uppercase tracking-widest font-bold transition-all duration-300 shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer"
                   >
-                    <span>Escríbeme</span>
+                    <span>{tx('Escríbeme', 'Write to me')}</span>
                     <ArrowRightIcon className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 </div>
@@ -362,7 +365,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenContact, o
               onClick={handleScrollToTop}
               className="inline-flex items-center gap-1 hover:text-white transition-colors cursor-pointer"
             >
-              <span>Volver arriba</span>
+              <span>{tx('Volver arriba', 'Back to top')}</span>
               <ArrowUpIcon className="w-3.5 h-3.5" />
             </button>
           </div>

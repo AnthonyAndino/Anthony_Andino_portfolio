@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { WORK_EXPERIENCE_DATA } from '../data/portfolioData';
+import { useLanguage } from '../i18n/LanguageContext';
+import { usePortfolioData } from '../i18n/usePortfolioData';
 import { Checkmark } from '../components/Icons';
 import { WorkExperienceCase } from '../types/portfolio';
 
@@ -16,6 +17,9 @@ interface WorkPageProps {
 }
 
 export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSection }) => {
+  const { t, tx } = useLanguage();
+  const { WORK_EXPERIENCE_DATA } = usePortfolioData();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const detailPanelRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -266,10 +270,10 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
         <div className="border-b border-white/10 pb-2.5 flex items-end justify-between">
           <div>
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#ff3e00] font-bold block mb-0.5">
-              01 / EXPERIENCIA PROFESIONAL EN PRODUCCIÓN
+              {tx('01 / EXPERIENCIA PROFESIONAL EN PRODUCCIÓN', '01 / PROFESSIONAL EXPERIENCE IN PRODUCTION')}
             </span>
             <h2 className="font-display font-light text-2xl sm:text-3xl md:text-4xl text-white tracking-tight">
-              Work & Audits
+              {t('section.work')}
             </h2>
           </div>
 
@@ -299,7 +303,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                   2024
                 </span>
                 <span className="text-[10px] xl:text-[11px] font-mono text-[#a1a1aa] uppercase tracking-wider block mt-1">
-                  HITO 01 · AUDITORÍA SQL
+                  {tx('HITO 01 · AUDITORÍA SQL', 'MILESTONE 01 · SQL AUDIT')}
                 </span>
               </div>
 
@@ -315,7 +319,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                   2025
                 </span>
                 <span className="text-[10px] xl:text-[11px] font-mono text-[#a1a1aa] uppercase tracking-wider block mt-1">
-                  HITO 02 · STORED PROCEDURES
+                  {t('work.hito')}
                 </span>
               </div>
 
@@ -331,7 +335,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                   2026 →
                 </span>
                 <span className="text-[10px] xl:text-[11px] font-mono text-[#ff3e00] font-bold uppercase tracking-wider block mt-1 flex items-center gap-1.5">
-                  <span>HITO 03 · EN CURSO</span>
+                  <span>{tx('HITO 03 · EN CURSO', 'MILESTONE 03 · IN PROGRESS')}</span>
                 </span>
               </div>
             </div>
@@ -446,7 +450,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
             <div
               tabIndex={0}
               role="button"
-              aria-label="Ver detalles de caso Cooperativa La Reyna"
+              aria-label={tx('Ver detalles de caso Cooperativa La Reyna', 'View details for Cooperativa La Reyna case')}
               onClick={(e) => handleOpenDetail(1, e.currentTarget)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -488,10 +492,10 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
               {/* Mini Visual: 3 Compact Steps */}
               <div className="my-2 p-2 rounded-xl bg-[#0f1012] border border-white/10 font-mono text-[11px] space-y-1">
                 <div className="flex items-center justify-between text-[10px] text-[#71717a] uppercase font-bold tracking-wider">
-                  <span>AUDIT PIPELINE</span>
+                  <span>{t('work.auditPipeline')}</span>
                   <span className="text-emerald-400 inline-flex items-center gap-1 font-bold">
                     <Checkmark className="w-2.5 h-2.5 text-emerald-400" />
-                    <span>RECONCILED</span>
+                    <span>{t('work.reconciled')}</span>
                   </span>
                 </div>
                 <div className="grid grid-cols-3 gap-1 text-center text-[9px] sm:text-[10px]">
@@ -502,7 +506,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                         : 'bg-white/5 text-white/50'
                     }`}
                   >
-                    1. Scan
+                    {t('work.step1')}
                   </div>
                   <div
                     className={`py-1 rounded transition-colors ${
@@ -511,7 +515,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                         : 'bg-white/5 text-white/50'
                     }`}
                   >
-                    2. Cross-Check
+                    {t('work.step2')}
                   </div>
                   <div
                     className={`py-1 rounded transition-colors inline-flex items-center justify-center gap-1 ${
@@ -520,7 +524,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                         : 'bg-white/5 text-white/50'
                     }`}
                   >
-                    <span>3. Fixed</span>
+                    <span>{t('work.step3')}</span>
                     <Checkmark className="w-2.5 h-2.5" />
                   </div>
                 </div>
@@ -540,7 +544,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                 </div>
 
                 <span className="text-xs font-mono font-bold text-[#ff3e00] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                  <span>Ver caso</span>
+                  <span>{tx('Ver caso', 'View case')}</span>
                   <span>→</span>
                 </span>
               </div>
@@ -550,7 +554,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
             <div
               tabIndex={0}
               role="button"
-              aria-label="Ver detalles de caso Porsalud"
+              aria-label={tx('Ver detalles de caso Porsalud', 'View details for Porsalud case')}
               onClick={(e) => handleOpenDetail(2, e.currentTarget)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -592,9 +596,9 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
               {/* Mini Visual: Procedure Debugger TEST DB > PROD with check */}
               <div className="my-2 p-2 rounded-xl bg-[#0f1012] border border-white/10 font-mono text-[11px] space-y-1">
                 <div className="flex items-center justify-between text-[10px] text-[#ff3e00] font-bold tracking-wider">
-                  <span>PROCEDURE DEBUGGER</span>
+                  <span>{t('work.procedureDebugger')}</span>
                   <span className="text-emerald-400 inline-flex items-center gap-1 font-bold">
-                    <span>TEST DB &gt; PROD</span>
+                    <span>{t('work.testDb')}</span>
                     <Checkmark className="w-2.5 h-2.5 text-emerald-400" />
                   </span>
                 </div>
@@ -617,7 +621,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                 </div>
 
                 <span className="text-xs font-mono font-bold text-[#ff3e00] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                  <span>Ver caso</span>
+                  <span>{tx('Ver caso', 'View case')}</span>
                   <span>→</span>
                 </span>
               </div>
@@ -627,7 +631,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
             <div
               tabIndex={0}
               role="button"
-              aria-label="Ver proyectos personales en curso"
+              aria-label={tx('Ver proyectos personales en curso', 'View personal projects in progress')}
               onClick={handleNavigateToProjects}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -669,9 +673,9 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
               {/* Mini Visual: Ascending Data Trend Line */}
               <div className="my-2 p-2 rounded-xl bg-[#0f1012] border border-white/10 font-mono text-[11px] space-y-1">
                 <div className="flex items-center justify-between text-[10px] text-[#ff3e00] font-bold tracking-wider">
-                  <span>UPSKILLING & PROJECTS</span>
+                  <span>{t('work.upskilling')}</span>
                   <span className="text-emerald-400 font-bold flex items-center gap-1">
-                    <span>EXPANDING</span>
+                    <span>{t('work.expanding')}</span>
                     {!activeDetailCase && (
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     )}
@@ -709,7 +713,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                 </div>
 
                 <span className="text-xs font-mono font-bold text-[#ff3e00] group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                  <span>Ver proyectos</span>
+                  <span>{tx('Ver proyectos', 'View projects')}</span>
                   <span>→</span>
                 </span>
               </div>
@@ -721,7 +725,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
         {/* 4. Bottom Footer Tracking Bar                                              */}
         {/* ========================================================================= */}
         <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-[#71717a]">
-          <span>TIMELINE · RECONCILIACIÓN, PROCEDURES & FORMACIÓN CONTINUA</span>
+          <span>{t('work.timeline')}</span>
           <span className="text-[#ff3e00]">SELECT * FROM experiencia;</span>
         </div>
       </div>
@@ -777,7 +781,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
               <button
                 ref={closeButtonRef}
                 onClick={handleCloseDetail}
-                aria-label="Cerrar detalle de caso"
+                aria-label={tx('Cerrar detalle de caso', 'Close case details')}
                 className="w-8 h-8 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 text-white flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#ff3e00] cursor-pointer"
               >
                 <span className="text-base leading-none">✕</span>
@@ -807,7 +811,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
 
                 <div className="pt-3 border-t border-white/10 space-y-2">
                   <span className="text-[10px] font-mono text-[#71717a] uppercase tracking-wider block">
-                    Stack Tecnológico:
+                    {tx('Stack Tecnológico:', 'Technology stack:')}
                   </span>
                   <div className="flex flex-wrap gap-1.5 font-mono text-xs">
                     {activeDetailData.detalle?.techStack.map((tech) => (
@@ -844,10 +848,10 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                   <div className="rounded-xl border border-white/15 bg-[#0f1012] p-4 sm:p-5 shadow-md font-mono text-xs space-y-3">
                     <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-white">
-                        AUDIT LEDGER / DISCREPANCY RECONCILER
+                        {t('work.auditLedger')}
                       </span>
                       <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold inline-flex items-center gap-1">
-                        <span>4 CASOS VERIFICADOS</span>
+                        <span>{tx('4 CASOS VERIFICADOS', '4 CASES VERIFIED')}</span>
                         <Checkmark className="w-2.5 h-2.5 text-emerald-400" />
                       </span>
                     </div>
@@ -861,8 +865,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                             : 'bg-white/10 text-white/60 hover:text-white'
                         }`}
                       >
-                        1. Scan Tables
-                      </button>
+                        {t('work.scanTables')}
+                       </button>
                       <button
                         onClick={() => setDetailLedgerStep(2)}
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
@@ -871,8 +875,8 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                             : 'bg-white/10 text-white/60 hover:text-white'
                         }`}
                       >
-                        2. Cross-Check
-                      </button>
+                        {t('work.step2')}
+                       </button>
                       <button
                         onClick={() => setDetailLedgerStep(3)}
                         className={`px-2 py-0.5 rounded transition-colors cursor-pointer inline-flex items-center gap-1 ${
@@ -881,36 +885,36 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                             : 'bg-white/10 text-white/60 hover:text-white'
                         }`}
                       >
-                        <span>3. Reconciled</span>
+                        <span>{t('work.reconciledStep')}</span>
                         <Checkmark className="w-2.5 h-2.5" />
                       </button>
                     </div>
 
                     <div className="space-y-1.5 pt-2 border-t border-white/10 text-[11px]">
                       <div className="flex justify-between py-0.5 border-b border-white/5">
-                        <span className="text-[#a1a1aa]">CUENTAS AUDITADAS:</span>
-                        <span className="font-bold text-white">AHORRO & CRÉDITO</span>
+                        <span className="text-[#a1a1aa]">{tx('CUENTAS AUDITADAS:', 'ACCOUNTS AUDITED:')}</span>
+                        <span className="font-bold text-white">{tx('AHORRO & CRÉDITO', 'SAVINGS & CREDIT')}</span>
                       </div>
                       <div className="flex justify-between py-0.5 border-b border-white/5">
-                        <span className="text-[#a1a1aa]">MÉTODO DE LOCALIZACIÓN:</span>
+                        <span className="text-[#a1a1aa]">{tx('MÉTODO DE LOCALIZACIÓN:', 'LOCATING METHOD:')}</span>
                         <span className="font-bold text-[#ff3e00]">SQL GROUP BY & HAVING</span>
                       </div>
                       <div className="flex justify-between py-0.5 border-b border-white/5">
-                        <span className="text-[#a1a1aa]">REGISTROS EN DISCREPANCIA:</span>
-                        <span className="font-bold text-white">4 INCIDENCIAS CRÍTICAS</span>
+                        <span className="text-[#a1a1aa]">{tx('REGISTROS EN DISCREPANCIA:', 'DISCREPANT RECORDS:')}</span>
+                        <span className="font-bold text-white">{tx('4 INCIDENCIAS CRÍTICAS', '4 CRITICAL INCIDENTS')}</span>
                       </div>
                       <div className="flex justify-between py-1 bg-emerald-950/60 border border-emerald-800/40 px-2 rounded">
-                        <span className="text-emerald-400 font-bold">ESTADO FINAL:</span>
-                        <span className="text-emerald-300 font-bold">SALDOS RECONCILIADOS AL 100%</span>
+                        <span className="text-emerald-400 font-bold">{tx('ESTADO FINAL:', 'FINAL STATUS:')}</span>
+                        <span className="text-emerald-300 font-bold">{tx('SALDOS RECONCILIADOS AL 100%', 'BALANCES 100% RECONCILED')}</span>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="rounded-xl bg-[#0e0f12] text-white p-4 sm:p-5 font-mono text-xs space-y-3 border border-white/15 shadow-lg">
                     <div className="flex items-center justify-between pb-2 border-b border-white/10 text-[#ff3e00] font-bold text-[11px]">
-                      <span>PROCEDURE DEBUGGER</span>
-                      <span className="text-emerald-400 inline-flex items-center gap-1">
-                        <span>TEST DB &gt; PROD</span>
+                      <span>{t('work.procedureDebugger')}</span>
+                      <span className="text-emerald-400 inline-flex items-center gap-1 font-bold">
+                        <span>{t('work.testDb')}</span>
                         <Checkmark className="w-2.5 h-2.5 text-emerald-400" />
                       </span>
                     </div>
@@ -924,7 +928,7 @@ export const WorkPage: React.FC<WorkPageProps> = ({ onOpenQuery, onScrollToSecti
                     </div>
                     <div className="p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/40 text-emerald-400 text-[11px] flex items-center gap-2">
                       <Checkmark className="w-3 h-3 flex-shrink-0 text-emerald-400" />
-                      <span>Gráficos y módulos validados y corregidos para personal multi-sede.</span>
+                      <span>{tx('Gráficos y módulos validados y corregidos para personal multi-sede.', 'Charts and modules validated and corrected for multi-site staff.')}</span>
                     </div>
                   </div>
                 )}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { SectionId } from './NavigationHeader';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SectionProgressIndicatorProps {
   activeSection: SectionId;
@@ -10,13 +11,15 @@ export const SectionProgressIndicator: React.FC<SectionProgressIndicatorProps> =
   activeSection,
   onNavigateSection,
 }) => {
+  const { t } = useLanguage();
+
   const sections: { id: SectionId; num: string; label: string }[] = [
-    { id: 'work', num: '01', label: 'Work' },
-    { id: 'projects', num: '02', label: 'Projects' },
-    { id: 'skills', num: '03', label: 'Stack' },
-    { id: 'about', num: '04', label: 'About' },
-    { id: 'sql', num: '05', label: 'Console' },
-    { id: 'contact', num: '06', label: 'Contact' },
+    { id: 'work', num: '01', label: t('progress.work') },
+    { id: 'projects', num: '02', label: t('progress.projects') },
+    { id: 'skills', num: '03', label: t('progress.skills') },
+    { id: 'about', num: '04', label: t('progress.about') },
+    { id: 'sql', num: '05', label: t('progress.sql') },
+    { id: 'contact', num: '06', label: t('progress.contact') },
   ];
 
   const isDark = activeSection === 'work' || activeSection === 'skills' || activeSection === 'sql' || activeSection === 'contact';
@@ -27,7 +30,7 @@ export const SectionProgressIndicator: React.FC<SectionProgressIndicatorProps> =
   return (
     <aside
       className="fixed right-6 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col items-end gap-3 pointer-events-auto select-none"
-      aria-label="Indicador de sección activa"
+      aria-label={t('progress.label')}
     >
       {sections.map((s) => {
         const isActive = activeSection === s.id;

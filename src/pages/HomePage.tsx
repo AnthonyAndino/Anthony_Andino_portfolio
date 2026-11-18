@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { HOME_HERO_DATA } from '../data/portfolioData';
+import { useLanguage } from '../i18n/LanguageContext';
+import { usePortfolioData } from '../i18n/usePortfolioData';
 
 interface HomePageProps {
   onScrollToSection: (sectionId: string) => void;
@@ -91,6 +92,8 @@ const DataCleaningText: React.FC<DataCleaningTextProps> = ({ targetText, isIniti
 
 // Subtle background architectural chart with forwardRef for parallax displacement
 const HeroBackgroundChart = React.forwardRef<HTMLDivElement>((_props, ref) => {
+  const { t } = useLanguage();
+
   return (
     <div
       ref={ref}
@@ -110,10 +113,10 @@ const HeroBackgroundChart = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <line x1="40" y1="330" x2="600" y2="330" stroke="#141517" strokeOpacity="0.10" />
 
         {/* Faint axis labels */}
-        <text x="45" y="85" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">100% RECONCILED</text>
-        <text x="45" y="165" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">75% AUDITED</text>
-        <text x="45" y="245" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">50% PARSED</text>
-        <text x="45" y="325" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">BASE / RAW</text>
+        <text x="45" y="85" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">{t('home.svg.reconciled')}</text>
+        <text x="45" y="165" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">{t('home.svg.audited')}</text>
+        <text x="45" y="245" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">{t('home.svg.parsed')}</text>
+        <text x="45" y="325" fill="#71717a" fillOpacity="0.45" fontSize="8" fontFamily="monospace">{t('home.svg.base')}</text>
 
         {/* 6 Architectural Distribution Bar Outlines */}
         <rect x="140" y="230" width="36" height="100" stroke="#141517" strokeOpacity="0.12" strokeWidth="1" strokeDasharray="3 3" fill="none" />
@@ -153,7 +156,7 @@ const HeroBackgroundChart = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <circle r="5" fill="#f4f1ea" stroke="#ff3e00" strokeWidth="1.8" />
           <circle r="2" fill="#ff3e00" />
           <text x="0" y="19" fill="#71717a" fillOpacity="0.6" fontSize="7" fontFamily="monospace" textAnchor="middle" letterSpacing="0.08em">
-            START
+            {t('home.start')}
           </text>
         </g>
       </svg>
@@ -166,6 +169,9 @@ HeroBackgroundChart.displayName = 'HeroBackgroundChart';
 export const HomePage: React.FC<HomePageProps> = ({
   onScrollToSection,
 }) => {
+  const { t } = useLanguage();
+  const { HOME_HERO_DATA } = usePortfolioData();
+
   // Layer refs for 60fps direct transform mutation (Zero React re-renders)
   const containerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<HTMLDivElement | null>(null);
@@ -283,7 +289,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       if (sideLabelRef.current) {
         const sx = currentX * cfg.verticalLabel;
         const sy = currentY * cfg.verticalLabel;
-        sideLabelRef.current.style.transform = `translate3d(${sx.toFixed(2)}px, calc(-50% + ${sy.toFixed(2)}px), 0) rotate(-90deg)`;
+        sideLabelRef.current.style.transform = `translate3d(${sx.toFixed(2)}px, calc(-50% + ${sy.toFixed(2)}px), 0) rotate(180deg)`;
       }
 
       // Layer 6: Bottom Information Columns
@@ -371,16 +377,15 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 2. Left vertical labels track (Desktop) with Parallax Layer */}
       <div
         ref={sideLabelRef}
-        className="hidden lg:flex absolute left-4 xl:left-6 top-1/2 -translate-y-1/2 -rotate-90 origin-center text-[9px] font-mono tracking-[0.3em] text-[#8a8a93] uppercase whitespace-nowrap select-none pointer-events-none z-[2] will-change-transform"
-        style={{ width: 'max-content' }}
+        className="hidden lg:flex absolute left-48 xl:left-56 top-1/2 -translate-y-1/2 [writing-mode:vertical-rl] rotate-180 origin-center text-[9px] font-mono tracking-[0.3em] text-[#8a8a93] uppercase whitespace-nowrap select-none pointer-events-none z-[2] will-change-transform"
       >
-        <span>DATA INTEGRITY</span>
+        <span>{t('home.tag.integrity')}</span>
         <span className="mx-2 text-[#ff3e00]">·</span>
-        <span>SQL AUDIT</span>
+        <span>{t('home.tag.audit')}</span>
         <span className="mx-2 text-[#ff3e00]">·</span>
-        <span>STORED PROCEDURES</span>
+        <span>{t('home.tag.procedures')}</span>
         <span className="mx-2 text-[#ff3e00]">·</span>
-        <span>BI</span>
+        <span>{t('home.tag.bi')}</span>
       </div>
 
       {/* Main Content Area */}
@@ -388,7 +393,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* Mobile top label */}
         <div className="lg:hidden pb-2 text-[9px] font-mono tracking-[0.25em] text-[#71717a] uppercase flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#ff3e00]" />
-          <span>DATA INTEGRITY · SQL AUDIT · BI</span>
+          <span>{t('home.tag.integrity')} · {t('home.tag.audit')} · {t('home.tag.bi')}</span>
         </div>
 
         {/* 3. Massive Headline with Fixed Reserved Height & Anchored Rows */}
@@ -427,7 +432,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="transform hover:translate-x-3 transition-transform duration-300">
                 <div className={getRowTransitionClass(0)}>
                   <h1 className="font-display font-extrabold tracking-[-0.04em] leading-none text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] xl:text-[8.5rem] text-[#141517] whitespace-nowrap">
-                    <span className="sr-only">Turn raw data into truth.</span>
+                    <span className="sr-only">{t('home.srLine')}</span>
                     <span aria-hidden="true">{currentPhrase.line1}</span>
                   </h1>
                 </div>
